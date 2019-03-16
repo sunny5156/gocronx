@@ -16,8 +16,8 @@ run-race: enable-race run
 kill:
 	-killall gocronx-node
 
-.PHONY: gocron
-gocron:
+.PHONY: gocronx
+gocronx:
 	go build $(RACE) -o bin/gocronx ./cmd/gocronx
 
 .PHONY: node
