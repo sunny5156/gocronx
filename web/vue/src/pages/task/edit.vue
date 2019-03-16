@@ -65,14 +65,14 @@
           </el-col>
         </el-row>
         <el-row v-if="form.level === 1">
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="crontab表达式" prop="spec">
-              <el-input v-model.trim="form.spec" placeholder="秒 分 时 天 月 周"></el-input>
+              <el-input v-model="form.spec" placeholder="秒 分 时 天 月 周"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="执行方式">
-          <el-select v-model.trim="form.protocol">
+          <el-select v-model.trim="form.protocol" style="width:100%;">
             <el-option
               v-for="item in protocolList"
               :key="item.value"
@@ -81,7 +81,9 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="请求方法" v-if="form.protocol === 1">
+        <el-form-item label="请求方法"
+                      v-if="form.protocol === 1"
+                      prop="http_method">
           <el-select key="http-method" v-model.trim="form.http_method" style="width:100%;">
             <el-option
               v-for="item in httpMethods"
@@ -91,8 +93,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item v-else label="任务节点">
-          <el-select key="shell" v-model="selectedHosts" filterable multiple placeholder="请选择" style="width:50%;">
+        <el-form-item v-if="form.protocol === 2"
+                      label="任务节点"
+                      prop="selectedHosts">
+          <el-select key="shell" v-model="form.selectedHosts" filterable multiple placeholder="请选择" style="width:100%;">
             <el-option
               v-for="item in hosts"
               :key="item.id"
@@ -102,7 +106,7 @@
           </el-select>
         </el-form-item>
         <el-row>
-          <el-col :span="16">
+          <el-col :span="24">
             <el-form-item label="命令" prop="command">
               <el-input
                 type="textarea"
@@ -136,9 +140,9 @@
               <el-input v-model.number.trim="form.timeout"></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="单实例运行">
-              <el-select v-model.trim="form.multi">
+              <el-select v-model.trim="form.multi" style="width: 100%;">
                 <el-option
                   v-for="item in runStatusList"
                   :key="item.value"
@@ -152,8 +156,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="任务失败重试次数" prop="retry_times">
-              <el-input v-model.number.trim="form.retry_times"
-                        placeholder="0 - 10, 默认0，不重试"></el-input>
+              <el-input v-model.number.trim="form.retry_times" placeholder="0 - 10, 默认0，不重试"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -163,9 +166,9 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="12">
             <el-form-item label="任务通知">
-              <el-select v-model.trim="form.notify_status">
+              <el-select v-model.trim="form.notify_status" style="width: 100%;">
                 <el-option
                   v-for="item in notifyStatusList"
                   :key="item.value"
@@ -175,23 +178,21 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8" v-if="form.notify_status !== 1">
+          <el-col :span="12" v-if="form.notify_status !== 1">
             <el-form-item label="通知类型">
-              <el-select v-model.trim="form.notify_type">
+              <el-select v-model.trim="form.notify_type" style="width: 100%;">
                 <el-option
                   v-for="item in notifyTypes"
                   :key="item.value"
                   :label="item.label"
-                  :value="item.value"
-                >
+                  :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8"
-                  v-if="form.notify_status !== 1 && form.notify_type === 2">
+          <el-col :span="12" v-if="form.notify_status !== 1 && form.notify_type === 2">
             <el-form-item label="接收用户">
-              <el-select key="notify-mail" v-model="selectedMailNotifyIds" filterable multiple placeholder="请选择">
+              <el-select key="notify-mail" v-model="selectedMailNotifyIds" filterable multiple placeholder="请选择" style="width: 100%;">
                 <el-option
                   v-for="item in mailUsers"
                   :key="item.id"
@@ -202,10 +203,9 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="8"
-                  v-if="form.notify_status !== 1 && form.notify_type === 3">
+          <el-col :span="12" v-if="form.notify_status !== 1 && form.notify_type === 3">
             <el-form-item label="发送Channel">
-              <el-select key="notify-slack" v-model="selectedSlackNotifyIds" filterable multiple placeholder="请选择">
+              <el-select key="notify-slack" v-model="selectedSlackNotifyIds" filterable multiple placeholder="请选择" style="width: 100%;">
                 <el-option
                   v-for="item in slackChannels"
                   :key="item.id"
@@ -225,7 +225,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="16">
+          <el-col :span="12">
             <el-form-item label="备注">
               <el-input
                 type="textarea"
@@ -275,7 +275,8 @@
           notify_keyword: '',
           retry_times: 0,
           retry_interval: 0,
-          remark: ''
+          remark: '',
+          selectedHosts: []
         },
         formRules: {
           name: [
@@ -298,6 +299,12 @@
           ],
           notify_keyword: [
             { required: true, message: '请输入要匹配的任务执行输出关键字', trigger: 'blur' }
+          ],
+          selectedHosts: [
+            { required: true, message: '请选择任务节点', trigger: 'change' }
+          ],
+          http_method: [
+            { required: true, message: '请选择请求方法', trigger: 'change' }
           ]
         },
         httpMethods: [
@@ -385,7 +392,6 @@
         hosts: [],
         mailUsers: [],
         slackChannels: [],
-        selectedHosts: [],
         selectedMailNotifyIds: [],
         selectedSlackNotifyIds: []
       }
@@ -441,7 +447,7 @@
         taskData.hosts = taskData.hosts || []
         if (this.form.protocol === 2) {
           taskData.hosts.forEach((v) => {
-            this.selectedHosts.push(v.host_id)
+            this.form.selectedHosts.push(v.host_id)
           })
         }
 
@@ -473,7 +479,7 @@
           if (!valid) {
             return false
           }
-          if (this.form.protocol === 2 && this.selectedHosts.length === 0) {
+          if (this.form.protocol === 2 && this.form.selectedHosts.length === 0) {
             this.$message.error('请选择任务节点')
             return false
           }
@@ -492,8 +498,8 @@
         })
       },
       save() {
-        if (this.form.protocol === 2 && this.selectedHosts.length > 0) {
-          this.form.host_id = this.selectedHosts.join(',')
+        if (this.form.protocol === 2 && this.form.selectedHosts.length > 0) {
+          this.form.host_id = this.form.selectedHosts.join(',')
         }
         if (this.form.notify_status > 1 && this.form.notify_type === 2) {
           this.form.notify_receiver_id = this.selectedMailNotifyIds.join(',')
