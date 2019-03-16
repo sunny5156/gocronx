@@ -29,8 +29,8 @@ const DefaultPort = 5920
 
 func main() {
 	cliApp := cli.NewApp()
-	cliApp.Name = "gocron"
-	cliApp.Usage = "gocron service"
+	cliApp.Name = "gocronx"
+	cliApp.Usage = "gocronx service"
 	cliApp.Version, _ = gotools.FormatAppVersion(AppVersion, GitCommit, BuildDate)
 	cliApp.Commands = getCommands()
 	cliApp.Flags = append(cliApp.Flags, []cli.Flag{}...)
