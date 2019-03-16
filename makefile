@@ -1,20 +1,20 @@
 .PHONY: build
-build: gocron node
+build: gocronx node
 
 .PHONY: build-race
 build-race: enable-race build
 
 .PHONY: run
 run: build kill
-	./bin/gocron-node &
-	./bin/gocron web -e dev
+	./bin/gocronx-node &
+	./bin/gocronx web -e dev
 
 .PHONY: run-race
 run-race: enable-race run
 
 .PHONY: kill
 kill:
-	-killall gocron-node
+	-killall gocronx-node
 
 .PHONY: gocron
 gocron:
@@ -22,7 +22,7 @@ gocron:
 
 .PHONY: node
 node:
-	go build $(RACE) -o bin/gocron-node ./cmd/node
+	go build $(RACE) -o bin/gocronx-node ./cmd/node
 
 .PHONY: test
 test:
