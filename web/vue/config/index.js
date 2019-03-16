@@ -13,7 +13,6 @@ module.exports = {
     proxyTable: {
       '/api': {
         target: 'http://localhost:5920',
-        //target: 'http://cron.ad.szecommerce.com', //47.107.228.156:80
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/api'
