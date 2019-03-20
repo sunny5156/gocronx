@@ -6,17 +6,17 @@
       :close-on-click-modal="false"
       :show-close="false"
       :close-on-press-escape="false"
+      v-on:keyup.enter="submit"
       width="500px">
-      <el-form ref="form" size="mini" :model="form" label-width="70px"
-               :rules="formRules">
+      <el-form ref="form" size="mini" :model="form" label-width="70px" :rules="formRules">
         <el-form-item label="用户名" prop="username">
           <el-input v-model.trim="form.username" placeholder="请输入用户名或邮箱"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model.trim="form.password" type="password" placeholder="请输入密码"></el-input>
+          <el-input v-model.trim="form.password" type="password" placeholder="请输入密码" @keyup.native.enter="submit"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submit">登录</el-button>
+          <el-button type="primary" @click="submit" v-on:keyup.enter="submit">登录</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
