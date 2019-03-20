@@ -2,7 +2,7 @@
   <el-container>
     <task-sidebar></task-sidebar>
     <el-main>
-      <el-form :inline="true" size="mini">
+      <el-form ref="searchParams" :inline="true" size="mini" :model="searchParams">
         <el-form-item label="任务ID">
           <el-input v-model.trim="searchParams.id"></el-input>
         </el-form-item>
@@ -46,12 +46,15 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="search()">搜索</el-button>
+          <el-button type="primary" @click="search">搜索</el-button>
+          <el-button @click="clearSearch('searchParams')">重置</el-button>
         </el-form-item>
       </el-form>
       <el-row type="flex" justify="end">
         <el-button type="primary" size="mini" @click="toEdit(null)" v-if="this.$store.getters.user.isAdmin">新增</el-button>
-        <el-button type="info" size="mini" @click="refresh">刷新</el-button>
+        <el-button type="success" size="mini" @click="batchOpenStatus">批量状态开</el-button>
+        <el-button type="danger" size="mini" @click="batchCloseStatus">批量状态关</el-button>
+        <el-button type="warning" size="mini" @click="refresh">刷新</el-button>
       </el-row>
       <el-pagination
         background
@@ -67,7 +70,12 @@
         :data="tasks"
         tooltip-effect="dark"
         border
+        @selection-change="handleSelectionChange"
         style="width: 100%">
+        <el-table-column
+          type="selection"
+          width="55">
+        </el-table-column>
         <el-table-column type="expand">
           <template slot-scope="scope">
             <el-form label-position="left" inline class="demo-table-expand">
@@ -113,11 +121,15 @@
         </el-table-column>
         <el-table-column
           prop="name"
-          label="任务名称">
+          label="任务名称"
+          show-overflow-tooltip>
         </el-table-column>
         <el-table-column
           prop="tag"
           label="标签">
+          <template slot-scope="scope">
+            <el-button type="text" title="点击可筛选当前标签" @click="filtrateTag(scope.row.tag)">{{ scope.row.tag }}</el-button>
+          </template>
         </el-table-column>
         <el-table-column
           prop="spec"
@@ -210,7 +222,8 @@
             value: '1',
             label: '停止'
           }
-        ]
+        ],
+        multipleSelection: []
       }
     },
     components: { taskSidebar },
@@ -249,6 +262,32 @@
       }
     },
     methods: {
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+        console.log(val)
+      },
+      batchOpenStatus() {
+        this.multipleSelection.forEach((v) => {
+          if (!v.status) {
+            taskService.enable(v.id, () => {
+              v.status = 1
+            })
+          }
+        })
+      },
+      batchCloseStatus() {
+        this.multipleSelection.forEach((v) => {
+          if (v.status) {
+            taskService.disable(v.id, () => {
+              v.status = 0
+            })
+          }
+        })
+      },
+      filtrateTag(tag) {
+        this.searchParams.tag = tag
+        this.search()
+      },
       changeStatus(item) {
         if (item.status) {
           taskService.enable(item.id)
@@ -282,6 +321,20 @@
             callback()
           }
         })
+      },
+      clearSearch(formName) {
+        this.$refs[formName].resetFields()
+        this.searchParams = {
+          page_size: 20,
+          page: 1,
+          id: '',
+          protocol: '',
+          name: '',
+          tag: '',
+          host_id: '',
+          status: ''
+        }
+        this.search()
       },
       runTask(item) {
         this.$appConfirm(() => {

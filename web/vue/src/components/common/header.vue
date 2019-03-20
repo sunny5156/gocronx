@@ -1,13 +1,12 @@
 <template>
-    <div></div>
+  <div></div>
 </template>
 
 <script>
-
-export default {
-  name: 'app-header',
-  data () {
-    return {}
+  export default {
+    name: 'app-header',
+    data() {
+      return {}
+    }
   }
-}
 </script>
