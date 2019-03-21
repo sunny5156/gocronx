@@ -50,7 +50,7 @@
 - `go get -d github.com/sunny5156/gocronx`
 - 编译 `make`
 - 启动
-    * gocronx `./bin/gocron web`
+    * gocronx `./bin/gocronx web`
     * gocronx-node `./bin/gocronx-node`
 
 
