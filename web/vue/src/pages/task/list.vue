@@ -312,11 +312,14 @@
         this.searchParams.page_size = pageSize
         this.search()
       },
-      search(callback = null) {
-        taskService.list(this.searchParams, (tasks, hosts) => {
-          this.tasks = tasks.data
-          this.taskTotal = tasks.total
-          this.hosts = hosts
+      search(e, callback = null) {
+        const that = this
+        taskService.list(that.searchParams, (tasks, hosts) => {
+          // debugger
+          that.tasks = tasks.data
+          that.taskTotal = tasks.total
+          that.hosts = hosts
+          this.$message.success('列表更新成功')
           if (callback) {
             callback()
           }
@@ -334,7 +337,9 @@
           host_id: '',
           status: ''
         }
-        this.search()
+        this.search(event, () => {
+          this.$message.success('重置成功')
+        })
       },
       runTask(item) {
         this.$appConfirm(() => {
@@ -353,8 +358,8 @@
       jumpToLog(item) {
         this.$router.push(`/task/log?task_id=${item.id}`)
       },
-      refresh() {
-        this.search(() => {
+      refresh(event) {
+        this.search(event, () => {
           this.$message.success('刷新成功')
         })
       },
