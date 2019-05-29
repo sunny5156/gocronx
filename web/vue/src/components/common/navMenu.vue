@@ -1,7 +1,7 @@
 <template>
   <div v-cloak>
     <div class="logo">
-      Gocron 定时任务系统
+      gocronx 定时任务系统
     </div>
     <el-menu
       :default-active="currentRoute"

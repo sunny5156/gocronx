@@ -177,8 +177,8 @@ run() {
     clean
 }
 
-package_gocron() {
-    BINARY_NAME='gocron'
+package_gocronx() {
+    BINARY_NAME='gocronx'
     MAIN_FILE="./cmd/gocronx/gocronx.go"
     INCLUDE_FILE=()
 
@@ -186,7 +186,7 @@ package_gocron() {
     run
 }
 
-package_gocron_node() {
+package_gocronx_node() {
     BINARY_NAME='gocronx-node'
     MAIN_FILE="./cmd/node/node.go"
     INCLUDE_FILE=()
@@ -211,6 +211,6 @@ do
     esac
 done
  
-package_gocron
-package_gocron_node
+package_gocronx
+package_gocronx_node
 
