@@ -103,10 +103,11 @@
         this.searchParams.page_size = pageSize
         this.search()
       },
-      search(callback = null) {
+      search(e, callback = null) {
         userService.list(this.searchParams, (data) => {
           this.users = data.data
           this.userTotal = data.total
+          this.$message.success('列表更新成功')
           if (callback) {
             callback()
           }
@@ -128,8 +129,8 @@
         }
         this.$router.push(path)
       },
-      refresh() {
-        this.search(() => {
+      refresh(e) {
+        this.search(e, () => {
           this.$message.success('刷新成功')
         })
       },

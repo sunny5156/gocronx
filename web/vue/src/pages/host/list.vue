@@ -9,7 +9,7 @@
           <el-input v-model.trim="searchParams.name"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="search()">搜索</el-button>
+          <el-button type="primary" @click="search">搜索</el-button>
         </el-form-item>
       </el-form>
       <el-row type="flex" justify="end">
@@ -100,10 +100,11 @@
         this.searchParams.page_size = pageSize
         this.search()
       },
-      search(callback = null) {
+      search(e, callback = null) {
         hostService.list(this.searchParams, (data) => {
           this.hosts = data.data
           this.hostTotal = data.total
+          this.$message.success('列表更新成功')
           if (callback) {
             callback()
           }
@@ -128,8 +129,8 @@
         }
         this.$router.push(path)
       },
-      refresh() {
-        this.search(() => {
+      refresh(e) {
+        this.search(e, () => {
           this.$message.success('刷新成功')
         })
       },
