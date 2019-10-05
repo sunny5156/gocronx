@@ -15,12 +15,6 @@ type Host struct {
 	Selected  bool `json:"-" xorm:"-"`
 }
 
-var mongocon = mongo.ConnectionURL{
-		Host:     "190.168.0.17", // PostgreSQL server IP or name.
-		Database: "test",         // Database name.
-		User:     "admin",        // Optional user name.
-		Password: "123456",       // Optional user password.
-	}
 
 // 新增
 func (host *Host) Create() (insertId int16, err error) {
