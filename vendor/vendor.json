@@ -328,24 +328,6 @@
 		{
 			"path": "https://github.com/go-gomail/gomail",
 			"revision": ""
-		},
-		{
-			"checksumSHA1": "XsbzHpnRbLfjTEQ2OIuX7YhzCL4=",
-			"path": "upper.io/db.v3",
-			"revision": "2f58dea678dbdcd3710158e8572025ef4d2c6df7",
-			"revisionTime": "2018-12-25T12:02:56Z"
-		},
-		{
-			"checksumSHA1": "urKOk7QFZYcplp6Dn+JMdy9wXqU=",
-			"path": "upper.io/db.v3/internal/immutable",
-			"revision": "2f58dea678dbdcd3710158e8572025ef4d2c6df7",
-			"revisionTime": "2018-12-25T12:02:56Z"
-		},
-		{
-			"checksumSHA1": "dknM1CA/v945SzvgZsZbUO0/E/Y=",
-			"path": "upper.io/db.v3/mongo",
-			"revision": "2f58dea678dbdcd3710158e8572025ef4d2c6df7",
-			"revisionTime": "2018-12-25T12:02:56Z"
 		}
 	],
 	"rootPath": "github.com/sunny5156/gocronx"
