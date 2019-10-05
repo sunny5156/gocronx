@@ -1,5 +1,6 @@
 <template>
   <el-container>
+    <user-sidebar></user-sidebar>
     <el-main>
       <el-form ref="form" :model="form" :rules="formRules" label-width="100px" size="mini" style="width: 500px;">
         <el-form-item>
@@ -41,70 +42,73 @@
 </template>
 
 <script>
-import userService from '../../api/user'
-export default {
-  name: 'user-edit',
-  data: function () {
-    return {
-      form: {
-        id: '',
-        name: '',
-        email: '',
-        is_admin: 0,
-        password: '',
-        confirm_password: '',
-        status: 1
-      },
-      formRules: {
-        name: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
-        ],
-        email: [
-          {type: 'email', required: true, message: '请输入有效邮箱地址', trigger: 'blur'}
-        ],
-        password: [
-          {required: true, message: '请输入密码', trigger: 'blur'}
-        ],
-        confirm_password: [
-          {required: true, message: '请再次输入密码', trigger: 'blur'}
-        ]
+  import userSidebar from './sidebar'
+  import userService from '../../api/user'
+
+  export default {
+    name: 'user-edit',
+    components: { userSidebar },
+    data: function () {
+      return {
+        form: {
+          id: '',
+          name: '',
+          email: '',
+          is_admin: 0,
+          password: '',
+          confirm_password: '',
+          status: 1
+        },
+        formRules: {
+          name: [
+            { required: true, message: '请输入用户名', trigger: 'blur' }
+          ],
+          email: [
+            { type: 'email', required: true, message: '请输入有效邮箱地址', trigger: 'blur' }
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'blur' }
+          ],
+          confirm_password: [
+            { required: true, message: '请再次输入密码', trigger: 'blur' }
+          ]
+        }
       }
-    }
-  },
-  created () {
-    const id = this.$route.params.id
-    if (!id) {
-      return
-    }
-    userService.detail(id, (data) => {
-      if (!data) {
-        this.$message.error('数据不存在')
+    },
+    created() {
+      const id = this.$route.params.id
+      if (!id) {
         return
       }
-      this.form.id = data.id
-      this.form.name = data.name
-      this.form.email = data.email
-      this.form.is_admin = data.is_admin
-      this.form.status = data.status
-    })
-  },
-  methods: {
-    submit () {
-      this.$refs['form'].validate((valid) => {
-        if (!valid) {
-          return false
+      userService.detail(id, (data) => {
+        if (!data) {
+          this.$message.error('数据不存在')
+          return
         }
-        this.save()
+        this.form.id = data.id
+        this.form.name = data.name
+        this.form.email = data.email
+        this.form.is_admin = data.is_admin
+        this.form.status = data.status
       })
     },
-    save () {
-      userService.update(this.form, () => {
+    methods: {
+      submit() {
+        this.$refs['form'].validate((valid) => {
+          if (!valid) {
+            return false
+          }
+          this.save()
+        })
+      },
+      save() {
+        userService.update(this.form, () => {
+          this.$router.push('/user')
+        })
+      },
+      cancel() {
         this.$router.push('/user')
-      })
-    },
-    cancel () {
-      this.$router.push('/user')
+      }
     }
   }
-}
 </script>

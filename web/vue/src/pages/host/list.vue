@@ -1,5 +1,6 @@
 <template>
   <el-container>
+    <host-sidebar></host-sidebar>
     <el-main>
       <el-form :inline="true" size="mini">
         <el-form-item label="节点ID">
@@ -70,10 +71,12 @@
 </template>
 
 <script>
+  import hostSidebar from './sidebar'
   import hostService from '../../api/host'
 
   export default {
     name: 'host-list',
+    components: { hostSidebar },
     data() {
       return {
         hosts: [],

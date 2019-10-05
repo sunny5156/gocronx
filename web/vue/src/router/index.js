@@ -8,9 +8,11 @@ import TaskEdit from '../pages/task/edit'
 import TaskLog from '../pages/taskLog/list'
 
 import HostList from '../pages/host/list'
+import HostOther  from '../pages/host/other'
 import HostEdit from '../pages/host/edit'
 
 import UserList from '../pages/user/list'
+import UserOther from '../pages/user/other'
 import UserEdit from '../pages/user/edit'
 import UserLogin from '../pages/user/login'
 import UserEditPassword from '../pages/user/editPassword'
@@ -81,6 +83,13 @@ const router = new Router({
       meta: {
         noNeedAdmin: true
       }
+    },{
+      path: '/host/other',
+      name: 'host-other',
+      component: HostOther,
+      meta: {
+        noNeedAdmin: true
+      }
     },
     {
       path: '/host/create',
@@ -96,6 +105,10 @@ const router = new Router({
       path: '/user',
       name: 'user-list',
       component: UserList
+    },{
+      path: '/user/other',
+      name: 'user-other',
+      component: UserOther
     },
     {
       path: '/user/create',

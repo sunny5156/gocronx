@@ -1,5 +1,6 @@
 <template>
   <el-container>
+    <user-sidebar></user-sidebar>
     <el-main>
       <el-row type="flex" justify="end">
         <el-button size="mini" type="primary" @click="toEdit(null)">新增</el-button>
@@ -63,10 +64,12 @@
 </template>
 
 <script>
+  import userSidebar from './sidebar'
   import userService from '../../api/user'
 
   export default {
     name: 'user-list',
+    components: { userSidebar },
     data() {
       return {
         users: [],
