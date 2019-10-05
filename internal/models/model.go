@@ -43,6 +43,7 @@ type BaseModel struct {
 	PageSize int `xorm:"-"`
 }
 
+
 func (model *BaseModel) parsePageAndPageSize(params CommonMap) {
 	page, ok := params["Page"]
 	if ok {
@@ -86,7 +87,7 @@ func CreateDb() *xorm.Engine {
 		engine.Logger().SetLevel(core.LOG_DEBUG)
 	}
 
-	go keepDbAlived(engine)
+	//go keepDbAlived(engine)
 
 	return engine
 }

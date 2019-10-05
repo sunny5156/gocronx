@@ -9,7 +9,7 @@
 			"revisionTime": "2013-12-26T21:35:31Z"
 		},
 		{
-			"checksumSHA1": "fxJNvbMHwBTdAPDLXgZinzAqLuc=",
+			"checksumSHA1": "7HXb3cry6luicWeJM9Uxwzfo9Rs=",
 			"path": "github.com/Unknwon/com",
 			"revision": "0db4a625e949e956314d7d1adea9bf82384cc10c",
 			"revisionTime": "2017-02-13T07:20:14Z"
@@ -91,13 +91,13 @@
 			"revisionTime": "2017-02-16T03:03:40Z"
 		},
 		{
-			"checksumSHA1": "8f50Zmdb/fHLkD0kx0Jfjud+vgU=",
+			"checksumSHA1": "1BBE89UpNp+qVvrF5oKdRLTaBJc=",
 			"path": "github.com/go-xorm/core",
 			"revision": "7daacb215ed03af093a72e0af32a5fe79458613d",
 			"revisionTime": "2017-02-06T15:24:21Z"
 		},
 		{
-			"checksumSHA1": "dvyiy7eFrgY417lCDIQ4i3BBQKY=",
+			"checksumSHA1": "mTt9bHpv9b7cxh09G9m3dfWHa7g=",
 			"path": "github.com/go-xorm/xorm",
 			"revision": "e8fbd41c16b9c0468dbae8db2fe0161a21265b8a",
 			"revisionTime": "2017-02-21T11:08:50Z"
@@ -113,13 +113,13 @@
 			"revision": ""
 		},
 		{
-			"checksumSHA1": "NlKBLqrUOoSWoXPQM84VY5PBCAc=",
+			"checksumSHA1": "j22mTM0X/UI4kbff6RaPeMNH4XY=",
 			"path": "github.com/jakecoffman/cron",
 			"revision": "57ac9950da80b6e2c12df9042429278cf8c729eb",
 			"revisionTime": "2016-09-12T16:42:50Z"
 		},
 		{
-			"checksumSHA1": "iNjI1ej9tFimwOFQXpK3V7DiJ2Q=",
+			"checksumSHA1": "R6zKqn31GjJH1G8W/api7fAW0RU=",
 			"path": "github.com/klauspost/cpuid",
 			"revision": "09cded8978dc9e80714c4d85b0322337b0a1e5e0",
 			"revisionTime": "2016-03-02T07:53:16Z"
@@ -155,7 +155,7 @@
 			"revisionTime": "2016-11-14T14:21:55Z"
 		},
 		{
-			"checksumSHA1": "Alg0T7VYqxup4zg22p40xwrAibU=",
+			"checksumSHA1": "99vfv3SGUThhLp3x1VQN+SWv1GE=",
 			"path": "github.com/sunny5156/gotools",
 			"revision": "d97890409429cb05a8eb33e138af1422cc68afa1",
 			"revisionTime": "2019-03-16T02:20:29Z"
