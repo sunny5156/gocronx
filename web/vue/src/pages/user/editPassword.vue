@@ -1,5 +1,6 @@
 <template>
   <el-container>
+    <user-sidebar></user-sidebar>
     <el-main>
       <el-form ref="form" :model="form" :rules="formRules" label-width="100px" size="mini" style="width: 500px;">
         <el-form-item label="新密码" prop="new_password">
@@ -18,50 +19,53 @@
 </template>
 
 <script>
-import userService from '../../api/user'
-export default {
-  name: 'user-edit-password',
-  data: function () {
-    return {
-      form: {
-        id: '',
-        new_password: '',
-        confirm_new_password: ''
+  import userSidebar from './sidebar'
+  import userService from '../../api/user'
+
+  export default {
+    name: 'user-edit-password',
+    components: { userSidebar },
+    data: function () {
+      return {
+        form: {
+          id: '',
+          new_password: '',
+          confirm_new_password: ''
+        },
+        formRules: {
+          new_password: [
+            { required: true, message: '请输入新密码', trigger: 'blur' }
+          ],
+          confirm_new_password: [
+            { required: true, message: '请再次输入新密码', trigger: 'blur' }
+          ]
+        }
+      }
+    },
+    created() {
+      const id = this.$route.params.id
+      if (!id) {
+        return
+      }
+      this.form.id = id
+    },
+    methods: {
+      submit() {
+        this.$refs['form'].validate((valid) => {
+          if (!valid) {
+            return false
+          }
+          this.save()
+        })
       },
-      formRules: {
-        new_password: [
-          {required: true, message: '请输入新密码', trigger: 'blur'}
-        ],
-        confirm_new_password: [
-          {required: true, message: '请再次输入新密码', trigger: 'blur'}
-        ]
+      save() {
+        userService.editPassword(this.form, () => {
+          this.$router.push('/user')
+        })
+      },
+      cancel() {
+        this.$router.push('/user')
       }
     }
-  },
-  created () {
-    const id = this.$route.params.id
-    if (!id) {
-      return
-    }
-    this.form.id = id
-  },
-  methods: {
-    submit () {
-      this.$refs['form'].validate((valid) => {
-        if (!valid) {
-          return false
-        }
-        this.save()
-      })
-    },
-    save () {
-      userService.editPassword(this.form, () => {
-        this.$router.push('/user')
-      })
-    },
-    cancel () {
-      this.$router.push('/user')
-    }
   }
-}
 </script>
