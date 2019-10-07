@@ -100,6 +100,8 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	if form.Protocol == models.TaskRPC && form.HostId == "" {
 		return json.CommonFailure("请选择主机名")
 	}
+	
+	userModel := new(models.User)
 
 	taskModel.Name = form.Name
 	taskModel.Protocol = form.Protocol
@@ -121,6 +123,7 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	taskModel.Level = form.Level
 	taskModel.DependencyStatus = form.DependencyStatus
 	taskModel.DependencyTaskId = strings.TrimSpace(form.DependencyTaskId)
+	taskModel.UserId = userModel.Id
 	if taskModel.NotifyStatus > 0 && taskModel.NotifyType != 3 && taskModel.NotifyReceiverId == "" {
 		return json.CommonFailure("至少选择一个通知接收者")
 	}
