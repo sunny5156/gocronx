@@ -70,6 +70,10 @@ func taskHostTableName() []string {
 	return []string{TablePrefix + "task_host", "th"}
 }
 
+func userTableName() []string {
+	return []string{TablePrefix + "user", "u"}
+}
+
 // 新增
 func (task *Task) Create() (insertId int, err error) {
 	_, err = Db.Insert(task)
@@ -195,9 +199,9 @@ func (task *Task) Detail(id int) (Task, error) {
 func (task *Task) List(params CommonMap) ([]Task, error) {
 	task.parsePageAndPageSize(params)
 	list := make([]Task, 0)
-	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id")
+	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id")
 	task.parseWhere(session, params)
-	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
+	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*","u.account").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
 
 	if err != nil {
 		return nil, err

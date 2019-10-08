@@ -101,8 +101,6 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 		return json.CommonFailure("请选择主机名")
 	}
 	
-	userModel := new(models.User)
-
 	taskModel.Name = form.Name
 	taskModel.Protocol = form.Protocol
 	taskModel.Command = strings.TrimSpace(form.Command)
@@ -123,7 +121,7 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	taskModel.Level = form.Level
 	taskModel.DependencyStatus = form.DependencyStatus
 	taskModel.DependencyTaskId = strings.TrimSpace(form.DependencyTaskId)
-	taskModel.UserId = userModel.Id
+	taskModel.UserId = Uid(ctx)  //增加任务创建者 @sunny5156 2019年10月7日16:19:56
 	if taskModel.NotifyStatus > 0 && taskModel.NotifyType != 3 && taskModel.NotifyReceiverId == "" {
 		return json.CommonFailure("至少选择一个通知接收者")
 	}
@@ -293,4 +291,17 @@ func parseQueryParams(ctx *macaron.Context) models.CommonMap {
 	base.ParsePageAndPageSize(ctx, params)
 
 	return params
+}
+
+// Uid 获取session中的Uid
+func Uid(ctx *macaron.Context) int {
+	uidInterface, ok := ctx.Data["uid"]
+	if !ok {
+		return 0
+	}
+	if uid, ok := uidInterface.(int); ok {
+		return uid
+	} else {
+		return 0
+	}
 }
