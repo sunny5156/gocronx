@@ -127,7 +127,7 @@ func writeConfig(form InstallForm) error {
 // 创建管理员账号
 func createAdminUser(form InstallForm) error {
 	user := new(models.User)
-	user.Name = form.AdminUsername
+	user.Account = form.AdminUsername
 	user.Password = form.AdminPassword
 	user.Email = form.AdminEmail
 	user.IsAdmin = 1

@@ -11,7 +11,7 @@ const PasswordSaltLength = 6
 // 用户model
 type User struct {
 	Id        int       `json:"id" xorm:"pk autoincr notnull "`
-	Name      string    `json:"name" xorm:"varchar(32) notnull unique"`              // 用户名
+	Account   string    `json:"account" xorm:"varchar(32) notnull unique"`              // 用户名
 	Password  string    `json:"-" xorm:"char(32) notnull "`                          // 密码
 	Salt      string    `json:"-" xorm:"char(6) notnull "`                           // 密码盐值
 	Email     string    `json:"email" xorm:"varchar(50) notnull unique default '' "` // 邮箱
@@ -64,9 +64,9 @@ func (user *User) Enable(id int) (int64, error) {
 }
 
 // 验证用户名和密码
-func (user *User) Match(username, password string) bool {
-	where := "(name = ? OR email = ?) AND status =? "
-	_, err := Db.Where(where, username, username, Enabled).Get(user)
+func (user *User) Match(account, password string) bool {
+	where := "(account = ? OR email = ?) AND status =? "
+	_, err := Db.Where(where, account, account, Enabled).Get(user)
 	if err != nil {
 		return false
 	}
@@ -86,12 +86,12 @@ func (user *User) Find(id int) error {
 }
 
 // 用户名是否存在
-func (user *User) UsernameExists(username string, uid int) (int64, error) {
+func (user *User) UsernameExists(account string, uid int) (int64, error) {
 	if uid > 0 {
-		return Db.Where("name = ? AND id != ?", username, uid).Count(user)
+		return Db.Where("account = ? AND id != ?", account, uid).Count(user)
 	}
 
-	return Db.Where("name = ?", username).Count(user)
+	return Db.Where("account = ?", account).Count(user)
 }
 
 // 邮箱地址是否存在

@@ -17,7 +17,7 @@
       <el-menu-item v-if="this.$store.getters.user.isAdmin" index="/system">系统管理</el-menu-item>
       <div style="float:right;">
         <el-submenu v-if="this.$store.getters.user.token" index="userStatus">
-          <template slot="title"><i class="el-icon-service"></i>{{ this.$store.getters.user.username }}</template>
+          <template slot="title"><i class="el-icon-service"></i>{{ this.$store.getters.user.account }}</template>
           <el-menu-item index="/user/edit-my-password">修改密码</el-menu-item>
           <el-menu-item @click="logout" index="/user/logout">退出</el-menu-item>
         </el-submenu>

@@ -8,7 +8,7 @@ import (
 
 type LoginLog struct {
 	Id        int       `json:"id" xorm:"pk autoincr notnull "`
-	Username  string    `json:"username" xorm:"varchar(32) notnull"`
+	Account  string    `json:"account" xorm:"varchar(32) notnull"`
 	Ip        string    `json:"ip" xorm:"varchar(15) not null"`
 	Created   time.Time `json:"created" xorm:"datetime notnull created"`
 	BaseModel `json:"-" xorm:"-"`
