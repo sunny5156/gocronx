@@ -9,8 +9,8 @@
       v-on:keyup.enter="submit"
       width="500px">
       <el-form ref="form" size="mini" :model="form" label-width="70px" :rules="formRules">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model.trim="form.username" placeholder="请输入用户名或邮箱"></el-input>
+        <el-form-item label="用户名" prop="account">
+          <el-input v-model.trim="form.account" placeholder="请输入用户名或邮箱"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
           <el-input v-model.trim="form.password" type="password" placeholder="请输入密码" @keyup.native.enter="submit"></el-input>
@@ -31,11 +31,11 @@
     data() {
       return {
         form: {
-          username: '',
+          account: '',
           password: ''
         },
         formRules: {
-          username: [
+          account: [
             { required: true, message: '请输入用户名', trigger: 'blur' }
           ],
           password: [
@@ -55,11 +55,11 @@
         })
       },
       login() {
-        userServcie.login(this.form.username, this.form.password, (data) => {
+        userServcie.login(this.form.account, this.form.password, (data) => {
           this.$store.commit('setUser', {
             token: data.token,
             uid: data.uid,
-            username: data.username,
+            account: data.account,
             isAdmin: data.is_admin
           })
           this.$router.push(this.$route.query.redirect || '/')

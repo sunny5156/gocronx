@@ -13,8 +13,8 @@ export default {
     httpClient.post('/user/store', data, callback)
   },
 
-  login(username, password, callback) {
-    httpClient.post('/user/login', { username, password }, callback)
+  login(account, password, callback) {
+    httpClient.post('/user/login', { account, password }, callback)
   },
 
   enable(id, callback) {
