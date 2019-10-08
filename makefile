@@ -63,5 +63,5 @@ statik:
 
 .PHONY: clean
 clean:
-	rm bin/gocron
-	rm bin/gocron-node
+	rm bin/gocronx
+	rm bin/gocronx-node
