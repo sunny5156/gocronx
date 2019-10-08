@@ -9,6 +9,9 @@
         <el-form-item label="任务名称">
           <el-input v-model.trim="searchParams.name"></el-input>
         </el-form-item>
+        <el-form-item label="创建者">
+          <el-input v-model.trim="searchParams.account"></el-input>
+        </el-form-item>
         <el-form-item label="标签">
           <el-input v-model.trim="searchParams.tag"></el-input>
         </el-form-item>
@@ -123,6 +126,13 @@
           prop="name"
           label="任务名称"
           show-overflow-tooltip>
+        </el-table-column>
+        <el-table-column
+          prop="account"
+          label="创建者">
+          <template slot-scope="scope">
+            <el-button type="text" title="点击可筛选当前创建者" @click="filtrateTag(scope.row.account)">{{ scope.row.account }}</el-button>
+          </template>
         </el-table-column>
         <el-table-column
           prop="tag"
