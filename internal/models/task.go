@@ -39,7 +39,8 @@ const (
 // 任务
 type Task struct {
 	Id               int                  `json:"id" xorm:"int pk autoincr"`
-	Name             string               `json:"name" xorm:"varchar(250) notnull"`                            // 任务名称
+	UserId           int	              `json:"user_id" xorm:"int notnull default 0"`                       // 创建ID
+	Name             string               `json:"name" xorm:"varchar(250) notnull"`                           // 任务名称
 	Level            TaskLevel            `json:"level" xorm:"tinyint notnull index default 1"`               // 任务等级 1: 主任务 2: 依赖任务
 	DependencyTaskId string               `json:"dependency_task_id" xorm:"varchar(64) notnull default ''"`   // 依赖任务ID,多个ID逗号分隔
 	DependencyStatus TaskDependencyStatus `json:"dependency_status" xorm:"tinyint notnull default 1"`         // 依赖关系 1:强依赖 主任务执行成功, 依赖任务才会被执行 2:弱依赖
@@ -67,6 +68,10 @@ type Task struct {
 
 func taskHostTableName() []string {
 	return []string{TablePrefix + "task_host", "th"}
+}
+
+func userTableName() []string {
+	return []string{TablePrefix + "user", "u"}
 }
 
 // 新增
@@ -194,9 +199,9 @@ func (task *Task) Detail(id int) (Task, error) {
 func (task *Task) List(params CommonMap) ([]Task, error) {
 	task.parsePageAndPageSize(params)
 	list := make([]Task, 0)
-	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id")
+	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id")
 	task.parseWhere(session, params)
-	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
+	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*","u.account").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
 
 	if err != nil {
 		return nil, err

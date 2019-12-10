@@ -3,7 +3,7 @@ class User {
     return {
       'token': this.getToken(),
       'uid': this.getUid(),
-      'username': this.getUsername(),
+      'account': this.getAccount(),
       'isAdmin': this.getIsAdmin()
     }
   }
@@ -30,12 +30,12 @@ class User {
     return this
   }
 
-  getUsername () {
-    return localStorage.getItem('username') || ''
+  getAccount () {
+    return localStorage.getItem('account') || ''
   }
 
-  setUsername (username) {
-    localStorage.setItem('username', username)
+  setAccount (account) {
+    localStorage.setItem('account', account)
     return this
   }
 

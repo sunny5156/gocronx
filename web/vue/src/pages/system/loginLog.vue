@@ -22,7 +22,7 @@
           label="ID">
         </el-table-column>
         <el-table-column
-          prop="username"
+          prop="account"
           label="用户名">
         </el-table-column>
         <el-table-column

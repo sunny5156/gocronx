@@ -19,7 +19,7 @@ const tokenDuration = 4 * time.Hour
 // UserForm 用户表单
 type UserForm struct {
 	Id              int
-	Name            string `binding:"Required;MaxSize(32)"` // 用户名
+	Account         string `binding:"Required;MaxSize(32)"` // 用户名
 	Password        string // 密码
 	ConfirmPassword string // 确认密码
 	Email           string `binding:"Required;MaxSize(50)"` // 邮箱
@@ -74,13 +74,13 @@ func Detail(ctx *macaron.Context) string {
 
 // 保存任务
 func Store(ctx *macaron.Context, form UserForm) string {
-	form.Name = strings.TrimSpace(form.Name)
+	form.Account = strings.TrimSpace(form.Account)
 	form.Email = strings.TrimSpace(form.Email)
 	form.Password = strings.TrimSpace(form.Password)
 	form.ConfirmPassword = strings.TrimSpace(form.ConfirmPassword)
 	json := utils.JsonResponse{}
 	userModel := models.User{}
-	nameExists, err := userModel.UsernameExists(form.Name, form.Id)
+	nameExists, err := userModel.UsernameExists(form.Account, form.Id)
 	if err != nil {
 		return json.CommonFailure(utils.FailureContent, err)
 	}
@@ -107,7 +107,7 @@ func Store(ctx *macaron.Context, form UserForm) string {
 			return json.CommonFailure("两次密码输入不一致")
 		}
 	}
-	userModel.Name = form.Name
+	userModel.Account = form.Account
 	userModel.Email = form.Email
 	userModel.Password = form.Password
 	userModel.IsAdmin = form.IsAdmin
@@ -120,7 +120,7 @@ func Store(ctx *macaron.Context, form UserForm) string {
 		}
 	} else {
 		_, err = userModel.Update(form.Id, models.CommonMap{
-			"name":     form.Name,
+			"account":     form.Account,
 			"email":    form.Email,
 			"status":   form.Status,
 			"is_admin": form.IsAdmin,
@@ -222,18 +222,18 @@ func UpdateMyPassword(ctx *macaron.Context) string {
 
 // ValidateLogin 验证用户登录
 func ValidateLogin(ctx *macaron.Context) string {
-	username := ctx.QueryTrim("username")
+	account := ctx.QueryTrim("account")
 	password := ctx.QueryTrim("password")
 	json := utils.JsonResponse{}
-	if username == "" || password == "" {
+	if account == "" || password == "" {
 		return json.CommonFailure("用户名、密码不能为空")
 	}
 	userModel := new(models.User)
-	if !userModel.Match(username, password) {
+	if !userModel.Match(account, password) {
 		return json.CommonFailure("用户名或密码错误")
 	}
 	loginLogModel := new(models.LoginLog)
-	loginLogModel.Username = userModel.Name
+	loginLogModel.Account = userModel.Account
 	loginLogModel.Ip = ctx.RemoteAddr()
 	_, err := loginLogModel.Create()
 	if err != nil {
@@ -249,19 +249,19 @@ func ValidateLogin(ctx *macaron.Context) string {
 	return json.Success(utils.SuccessContent, map[string]interface{}{
 		"token":    token,
 		"uid":      userModel.Id,
-		"username": userModel.Name,
+		"account":  userModel.Account,
 		"is_admin": userModel.IsAdmin,
 	})
 }
 
 // Username 获取session中的用户名
 func Username(ctx *macaron.Context) string {
-	usernameInterface, ok := ctx.Data["username"]
+	usernameInterface, ok := ctx.Data["account"]
 	if !ok {
 		return ""
 	}
-	if username, ok := usernameInterface.(string); ok {
-		return username
+	if account, ok := usernameInterface.(string); ok {
+		return account
 	} else {
 		return ""
 	}
@@ -305,8 +305,8 @@ func generateToken(user *models.User) (string, error) {
 	claims["exp"] = time.Now().Add(tokenDuration).Unix()
 	claims["uid"] = user.Id
 	claims["iat"] = time.Now().Unix()
-	claims["issuer"] = "gocron"
-	claims["username"] = user.Name
+	claims["issuer"] = "gocronx"
+	claims["account"] = user.Account
 	claims["is_admin"] = user.IsAdmin
 	token.Claims = claims
 
@@ -331,7 +331,7 @@ func RestoreToken(ctx *macaron.Context) error {
 		return errors.New("invalid claims")
 	}
 	ctx.Data["uid"] = int(claims["uid"].(float64))
-	ctx.Data["username"] = claims["username"]
+	ctx.Data["account"] = claims["account"]
 	ctx.Data["is_admin"] = int(claims["is_admin"].(float64))
 
 	return nil

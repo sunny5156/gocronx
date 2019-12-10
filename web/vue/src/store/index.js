@@ -26,7 +26,7 @@ export default new vuex.Store({
     setUser (state, user) {
       userStorage.setToken(user.token)
       userStorage.setUid(user.uid)
-      userStorage.setUsername(user.username)
+      userStorage.setAccount(user.account)
       userStorage.setIsAdmin(user.isAdmin)
       state.user = user
     },

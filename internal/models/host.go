@@ -15,6 +15,7 @@ type Host struct {
 	Selected  bool `json:"-" xorm:"-"`
 }
 
+
 // 新增
 func (host *Host) Create() (insertId int16, err error) {
 	_, err = Db.Insert(host)
@@ -32,6 +33,7 @@ func (host *Host) UpdateBean(id int16) (int64, error) {
 // 更新
 func (host *Host) Update(id int, data CommonMap) (int64, error) {
 	return Db.Table(host).ID(id).Update(data)
+	
 }
 
 // 删除
