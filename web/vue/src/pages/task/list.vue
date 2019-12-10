@@ -314,6 +314,7 @@
       },
       search(e, callback = null) {
         const that = this
+        that.searchParams.page = 1
         taskService.list(that.searchParams, (tasks, hosts) => {
           // debugger
           that.tasks = tasks.data
