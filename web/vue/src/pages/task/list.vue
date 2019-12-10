@@ -172,7 +172,7 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="toEdit(scope.row)">编辑</el-button>
             <el-button size="mini" type="success" @click="runTask(scope.row)">手动执行</el-button>
-            <el-button size="mini" type="info" @click="jumpToLog(scope.row)">查看日志</el-button>
+            <el-button size="mini" type="info" @click="jumpToLog('task-log', { id: scope.row.id })">查看日志</el-button>
             <el-button size="mini" type="danger" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -356,8 +356,13 @@
           })
         })
       },
-      jumpToLog(item) {
-        this.$router.push(`/task/log?task_id=${item.id}`)
+      jumpToLog(name, params) {
+        // this.$router.push(`/task/log?task_id=${params.id}`)
+        const { href } = this.$router.resolve({
+          name: name,
+          params: params || {}
+        })
+        window.open(`${href}?task_id=${params.id}`, '_blank')
       },
       refresh(event) {
         this.search(event, () => {
