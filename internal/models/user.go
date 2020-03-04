@@ -2,7 +2,7 @@ package models
 
 import (
 	"time"
-
+	"fmt"
 	"github.com/sunny5156/gocronx/internal/modules/utils"
 )
 
@@ -123,4 +123,23 @@ func (user *User) encryptPassword(password, salt string) string {
 // 生成密码盐值
 func (user *User) generateSalt() string {
 	return utils.RandString(PasswordSaltLength)
+}
+
+
+func (user *User) GetAllUsers() (map[int]string, error) {
+	list := make([]User, 0)
+	err := Db.Desc("id").Cols("id,account,email").Find(&list)
+	
+	users := make(map[int]string)
+//	fmt.Println("=============================")
+//	fmt.Println(list)
+//	fmt.Println("=============================")
+	
+	
+	//var users
+	for i, _ := range list {
+		users[list[i].Id] = list[i].Account
+	}
+
+	return users,err
 }
