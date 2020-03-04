@@ -3,7 +3,7 @@ package task
 import (
 	"strconv"
 	"strings"
-
+	"fmt"
 	"github.com/go-macaron/binding"
 	"github.com/jakecoffman/cron"
 	"github.com/sunny5156/gocronx/internal/models"
@@ -51,6 +51,7 @@ func (f TaskForm) Error(ctx *macaron.Context, errs binding.Errors) {
 func Index(ctx *macaron.Context) string {
 	taskModel := new(models.Task)
 	queryParams := parseQueryParams(ctx)
+	fmt.Println(queryParams)
 	total, err := taskModel.Total(queryParams)
 	if err != nil {
 		logger.Error(err)
