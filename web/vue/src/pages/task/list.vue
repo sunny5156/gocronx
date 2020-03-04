@@ -131,7 +131,7 @@
           prop="account"
           label="创建者">
           <template slot-scope="scope">
-            <el-button type="text" title="点击可筛选当前创建者" @click="filtrateTag(scope.row.account)">{{ scope.row.account }}</el-button>
+            <el-button type="text" title="点击可筛选当前创建者" @click="filtrateUser(scope.row.account)">{{ scope.row.account }}</el-button>
           </template>
         </el-table-column>
         <el-table-column
@@ -210,7 +210,8 @@
           name: '',
           tag: '',
           host_id: '',
-          status: ''
+          status: '',
+          account: ''
         },
         isAdmin: this.$store.getters.user.isAdmin,
         protocolList: [
@@ -294,6 +295,10 @@
           }
         })
       },
+      filtrateUser(account) {
+        this.searchParams.account = account
+        this.search()
+      },
       filtrateTag(tag) {
         this.searchParams.tag = tag
         this.search()
@@ -345,7 +350,8 @@
           name: '',
           tag: '',
           host_id: '',
-          status: ''
+          status: '',
+          account: ''
         }
         this.search(event, () => {
           this.$message.success('重置成功')
