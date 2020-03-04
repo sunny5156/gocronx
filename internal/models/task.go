@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 	"time"
+	"fmt"
 	"github.com/go-xorm/xorm"
 )
 
@@ -150,6 +151,11 @@ func (task *Task) setHostsForTasks(tasks []Task) ([]Task, error) {
 	userModel := new(User)
 	users , erro := userModel.GetAllUsers()
 	
+	fmt.Println("==================")
+	fmt.Println(users)
+	fmt.Println(erro)
+	fmt.Println("==================")
+	
 	var err error
 	for i, value := range tasks {
 		taskHostDetails, err := taskHostModel.GetHostIdsByTaskId(value.Id)
@@ -161,6 +167,10 @@ func (task *Task) setHostsForTasks(tasks []Task) ([]Task, error) {
 		
 	}
 	
+	fmt.Println("==================")
+	fmt.Println(tasks)
+	fmt.Println("==================")
+
 	return tasks, err
 }
 
