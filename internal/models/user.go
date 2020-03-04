@@ -2,7 +2,6 @@ package models
 
 import (
 	"time"
-	"fmt"
 	"github.com/sunny5156/gocronx/internal/modules/utils"
 )
 
@@ -131,10 +130,6 @@ func (user *User) GetAllUsers() (map[int]string, error) {
 	err := Db.Desc("id").Cols("id,account,email").Find(&list)
 	
 	users := make(map[int]string)
-	fmt.Println("=============================")
-	fmt.Println(list)
-	fmt.Println("=============================")
-	
 	
 	//var users
 	for i, _ := range list {
