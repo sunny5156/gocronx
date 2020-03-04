@@ -131,9 +131,9 @@ func (user *User) GetAllUsers() (map[int]string, error) {
 	err := Db.Desc("id").Cols("id,account,email").Find(&list)
 	
 	users := make(map[int]string)
-//	fmt.Println("=============================")
-//	fmt.Println(list)
-//	fmt.Println("=============================")
+	fmt.Println("=============================")
+	fmt.Println(list)
+	fmt.Println("=============================")
 	
 	
 	//var users
