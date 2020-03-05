@@ -68,7 +68,6 @@ func Index(ctx *macaron.Context) string {
 	return jsonResp.Success(utils.SuccessContent, map[string]interface{}{
 		"total": total,
 		"data":  tasks,
-		"param": queryParams,
 	})
 }
 
@@ -285,6 +284,7 @@ func parseQueryParams(ctx *macaron.Context) models.CommonMap {
 	params["Name"] = ctx.QueryTrim("name")
 	params["Protocol"] = ctx.QueryInt("protocol")
 	params["Tag"] = ctx.QueryTrim("tag")
+	params["Account"] = ctx.QueryTrim("account")
 	status := ctx.QueryInt("status")
 	if status >= 0 {
 		status -= 1
