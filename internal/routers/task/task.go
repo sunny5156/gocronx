@@ -290,7 +290,9 @@ func parseQueryParams(ctx *macaron.Context) models.CommonMap {
 		status -= 1
 	}
 	params["Status"] = status
-	base.ParsePageAndPageSize(ctx, *params)
+	base.ParsePageAndPageSize(ctx, params)
+	
+	fmt.Println(params)
 
 	return params
 }
