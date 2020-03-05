@@ -6,7 +6,7 @@ import (
 )
 
 // ParsePageAndPageSize 解析查询参数中的页数和每页数量
-func ParsePageAndPageSize(ctx *macaron.Context, params models.CommonMap) {
+func ParsePageAndPageSize(ctx *macaron.Context, *params models.CommonMap) {
 	page := ctx.QueryInt("page")
 	pageSize := ctx.QueryInt("page_size")
 	if page <= 0 {
