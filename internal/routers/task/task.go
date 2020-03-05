@@ -68,6 +68,7 @@ func Index(ctx *macaron.Context) string {
 	return jsonResp.Success(utils.SuccessContent, map[string]interface{}{
 		"total": total,
 		"data":  tasks,
+		"param": queryParams,
 	})
 }
 
