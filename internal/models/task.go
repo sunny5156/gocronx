@@ -255,7 +255,7 @@ func (task *Task) GetDependencyTaskList(ids string) ([]Task, error) {
 }
 
 func (task *Task) Total(params CommonMap) (int64, error) {
-	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id")
+	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id")
 	task.parseWhere(session, params)
 	list := make([]Task, 0)
 
