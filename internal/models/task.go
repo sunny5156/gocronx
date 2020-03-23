@@ -259,7 +259,7 @@ func (task *Task) Total(params CommonMap) (int64, error) {
 	task.parseWhere(session, params)
 	list := make([]Task, 0)
 
-	err := session.GroupBy("t.id").Find(&list)
+	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*,u.account").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
 
 	return int64(len(list)), err
 }
