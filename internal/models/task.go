@@ -2,9 +2,10 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
-	"fmt"
+
 	"github.com/go-xorm/xorm"
 )
 
@@ -39,7 +40,7 @@ const (
 // 任务
 type Task struct {
 	Id               int                  `json:"id" xorm:"int pk autoincr"`
-	UserId           int	              `json:"user_id" xorm:"int notnull default 0"`                       // 创建ID
+	UserId           int                  `json:"user_id" xorm:"int notnull default 0"`                       // 创建ID
 	Name             string               `json:"name" xorm:"varchar(250) notnull"`                           // 任务名称
 	Level            TaskLevel            `json:"level" xorm:"tinyint notnull index default 1"`               // 任务等级 1: 主任务 2: 依赖任务
 	DependencyTaskId string               `json:"dependency_task_id" xorm:"varchar(64) notnull default ''"`   // 依赖任务ID,多个ID逗号分隔
@@ -61,10 +62,10 @@ type Task struct {
 	Status           Status               `json:"status" xorm:"tinyint notnull index default 0"` // 状态 1:正常 0:停止
 	Created          time.Time            `json:"created" xorm:"datetime notnull created"`       // 创建时间
 	Deleted          time.Time            `json:"deleted" xorm:"datetime deleted"`               // 删除时间
-	BaseModel        					   `json:"-" xorm:"-"`
-	Hosts            []TaskHostDetail 	   `json:"hosts" xorm:"-"`
-	NextRunTime      time.Time             `json:"next_run_time" xorm:"-"`
-	Account			 string                `json:"account" xorm:"-"`
+	BaseModel        `json:"-" xorm:"-"`
+	Hosts            []TaskHostDetail `json:"hosts" xorm:"-"`
+	NextRunTime      time.Time        `json:"next_run_time" xorm:"-"`
+	Account          string           `json:"account" xorm:"-"`
 }
 
 func taskHostTableName() []string {
@@ -149,13 +150,8 @@ func (task *Task) ActiveListByHostId(hostId int16) ([]Task, error) {
 func (task *Task) setHostsForTasks(tasks []Task) ([]Task, error) {
 	taskHostModel := new(TaskHost)
 	userModel := new(User)
-	users , erro := userModel.GetAllUsers()
-	
-	fmt.Println("==================")
-	fmt.Println(users)
-	fmt.Println(erro)
-	fmt.Println("==================")
-	
+	users, _ := userModel.GetAllUsers()
+
 	var err error
 	for i, value := range tasks {
 		taskHostDetails, err := taskHostModel.GetHostIdsByTaskId(value.Id)
@@ -164,17 +160,11 @@ func (task *Task) setHostsForTasks(tasks []Task) ([]Task, error) {
 		}
 		tasks[i].Hosts = taskHostDetails
 		tasks[i].Account = users[tasks[i].UserId]
-		
+
 	}
-	
-	fmt.Println("==================")
-	fmt.Println(tasks)
-	fmt.Println("==================")
 
 	return tasks, err
 }
-
-
 
 // 判断任务名称是否存在
 func (task *Task) NameExist(name string, id int) (bool, error) {
@@ -224,7 +214,6 @@ func (task *Task) List(params CommonMap) ([]Task, error) {
 	if err != nil {
 		return nil, err
 	}
-	
 
 	return task.setHostsForTasks(list)
 }

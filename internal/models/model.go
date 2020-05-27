@@ -6,9 +6,9 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/lib/pq"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
+	_ "github.com/lib/pq"
 	"github.com/sunny5156/gocronx/internal/modules/app"
 	"github.com/sunny5156/gocronx/internal/modules/logger"
 	"github.com/sunny5156/gocronx/internal/modules/setting"
@@ -42,7 +42,6 @@ type BaseModel struct {
 	Page     int `xorm:"-"`
 	PageSize int `xorm:"-"`
 }
-
 
 func (model *BaseModel) parsePageAndPageSize(params CommonMap) {
 	page, ok := params["Page"]
