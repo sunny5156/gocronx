@@ -13,6 +13,7 @@
       router>
       <el-menu-item index="/task">任务管理</el-menu-item>
       <el-menu-item index="/host">任务节点</el-menu-item>
+      <el-menu-item index="/project">项目管理</el-menu-item>
       <el-menu-item v-if="this.$store.getters.user.isAdmin" index="/user">用户管理</el-menu-item>
       <el-menu-item v-if="this.$store.getters.user.isAdmin" index="/system">系统管理</el-menu-item>
       <div style="float:right;">

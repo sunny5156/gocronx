@@ -25,6 +25,9 @@ import NotificationWebhook from '../pages/system/notification/webhook'
 import Install from '../pages/install/index'
 import LoginLog from '../pages/system/loginLog'
 
+import ProjectList from '../pages/project/list'
+import ProjectEdit from '../pages/project/edit'
+
 Vue.use(Router)
 
 const router = new Router({
@@ -83,7 +86,8 @@ const router = new Router({
       meta: {
         noNeedAdmin: true
       }
-    },{
+    },
+    {
       path: '/host/other',
       name: 'host-other',
       component: HostOther,
@@ -105,7 +109,8 @@ const router = new Router({
       path: '/user',
       name: 'user-list',
       component: UserList
-    },{
+    },
+    {
       path: '/user/other',
       name: 'user-other',
       component: UserOther
@@ -164,6 +169,30 @@ const router = new Router({
       path: '/system/login-log',
       name: 'login-log',
       component: LoginLog
+    },
+    {
+      path: '/project',
+      name: 'project-list',
+      component: ProjectList,
+      meta: {
+        noNeedAdmin: true
+      }
+    },
+    {
+      path: '/project/create',
+      name: 'project-create',
+      component: ProjectEdit,
+      meta: {
+        noNeedAdmin: true
+      }
+    },
+    {
+      path: '/project/edit/:id',
+      name: 'project-edit',
+      component: ProjectEdit,
+      meta: {
+        noNeedAdmin: true
+      }
     }
   ]
 })
