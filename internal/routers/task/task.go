@@ -109,7 +109,7 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	// }
 
 	fmt.Println("--------------------------------")
-	fmt.Printf("%+v", form)
+	fmt.Printf("%T", form)
 	fmt.Println("--------------------------------")
 
 	taskModel.Name = form.Name
@@ -134,6 +134,10 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	taskModel.DependencyTaskId = strings.TrimSpace(form.DependencyTaskId)
 	taskModel.UserId = Uid(ctx) //增加任务创建者 @sunny5156 2019年10月7日16:19:56
 	taskModel.ProjectId = form.ProjectId
+
+	fmt.Println("--------------------------------")
+	fmt.Printf("%T", taskModel)
+	fmt.Println("--------------------------------")
 	if taskModel.NotifyStatus > 0 && taskModel.NotifyType != 3 && taskModel.NotifyReceiverId == "" {
 		return json.CommonFailure("至少选择一个通知接收者")
 	}
