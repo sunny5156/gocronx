@@ -51,7 +51,7 @@
         </el-table-column>
         <el-table-column label="操作" width="300" v-if="this.isAdmin">
           <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="toManager(scope.row)">人员管理</el-button>
+            <!-- <el-button size="mini" type="primary" @click="toManager(scope.row)">人员管理</el-button> -->
             <el-button size="mini" type="primary" @click="toAddTask(scope.row)">添加任务</el-button>
             <el-button size="mini" type="primary" @click="toTaskList(scope.row)">任务列表</el-button>
           </template>
