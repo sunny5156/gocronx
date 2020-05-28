@@ -11,6 +11,7 @@
       active-text-color="#ffd04b"
       style="padding-left: 180px;"
       router>
+      <el-menu-item index="/project">项目管理</el-menu-item>
       <el-menu-item index="/task">任务管理</el-menu-item>
       <el-menu-item index="/host">任务节点</el-menu-item>
       <el-menu-item v-if="this.$store.getters.user.isAdmin" index="/user">用户管理</el-menu-item>
@@ -27,27 +28,27 @@
 </template>
 
 <script>
-  export default {
-    name: 'app-nav-menu',
-    data() {
-      return {}
-    },
-    computed: {
-      currentRoute() {
-        if (this.$route.path === '/') {
-          return '/task'
-        }
-        const segments = this.$route.path.split('/')
-        return `/${segments[1]}`
+export default {
+  name: 'app-nav-menu',
+  data () {
+    return {}
+  },
+  computed: {
+    currentRoute () {
+      if (this.$route.path === '/') {
+        return '/task'
       }
-    },
-    methods: {
-      logout() {
-        this.$store.commit('logout')
-        this.$router.push('/')
-      }
+      const segments = this.$route.path.split('/')
+      return `/${segments[1]}`
+    }
+  },
+  methods: {
+    logout () {
+      this.$store.commit('logout')
+      this.$router.push('/')
     }
   }
+}
 </script>
 
 <style scoped>

@@ -2,6 +2,7 @@ package models
 
 import (
 	"time"
+
 	"github.com/sunny5156/gocronx/internal/modules/utils"
 )
 
@@ -10,7 +11,7 @@ const PasswordSaltLength = 6
 // 用户model
 type User struct {
 	Id        int       `json:"id" xorm:"pk autoincr notnull "`
-	Account   string    `json:"account" xorm:"varchar(32) notnull unique"`              // 用户名
+	Account   string    `json:"account" xorm:"varchar(32) notnull unique"`           // 用户名
 	Password  string    `json:"-" xorm:"char(32) notnull "`                          // 密码
 	Salt      string    `json:"-" xorm:"char(6) notnull "`                           // 密码盐值
 	Email     string    `json:"email" xorm:"varchar(50) notnull unique default '' "` // 邮箱
@@ -19,6 +20,12 @@ type User struct {
 	IsAdmin   int8      `json:"is_admin" xorm:"tinyint notnull default 0"` // 是否是管理员 1:管理员 0:普通用户
 	Status    Status    `json:"status" xorm:"tinyint notnull default 1"`   // 1: 正常 0:禁用
 	BaseModel `json:"-" xorm:"-"`
+}
+
+//用户信息
+type UserInfo struct {
+	Account string `json:"account" xorm:"<-"`
+	Email   string `json:"email" xorm:"<-"`
 }
 
 // 新增
@@ -124,17 +131,16 @@ func (user *User) generateSalt() string {
 	return utils.RandString(PasswordSaltLength)
 }
 
-
 func (user *User) GetAllUsers() (map[int]string, error) {
 	list := make([]User, 0)
 	err := Db.Desc("id").Cols("id,account,email").Find(&list)
-	
+
 	users := make(map[int]string)
-	
+
 	//var users
 	for i, _ := range list {
 		users[list[i].Id] = list[i].Account
 	}
 
-	return users,err
+	return users, err
 }

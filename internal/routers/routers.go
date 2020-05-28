@@ -11,6 +11,7 @@ import (
 	"github.com/go-macaron/binding"
 	"github.com/go-macaron/gzip"
 	"github.com/go-macaron/toolbox"
+	"github.com/rakyll/statik/fs"
 	"github.com/sunny5156/gocronx/internal/modules/app"
 	"github.com/sunny5156/gocronx/internal/modules/logger"
 	"github.com/sunny5156/gocronx/internal/modules/utils"
@@ -18,10 +19,10 @@ import (
 	"github.com/sunny5156/gocronx/internal/routers/install"
 	"github.com/sunny5156/gocronx/internal/routers/loginlog"
 	"github.com/sunny5156/gocronx/internal/routers/manage"
+	"github.com/sunny5156/gocronx/internal/routers/project"
 	"github.com/sunny5156/gocronx/internal/routers/task"
 	"github.com/sunny5156/gocronx/internal/routers/tasklog"
 	"github.com/sunny5156/gocronx/internal/routers/user"
-	"github.com/rakyll/statik/fs"
 	"gopkg.in/macaron.v1"
 
 	_ "github.com/sunny5156/gocronx/internal/statik"
@@ -102,6 +103,15 @@ func Register(m *macaron.Macaron) {
 		m.Get("/all", host.All)
 		m.Get("/ping/:id", host.Ping)
 		m.Post("/remove/:id", host.Remove)
+	})
+
+	// 项目
+	m.Group("/project", func() {
+		m.Get("/:id", project.Detail)
+		m.Post("/store", binding.Bind(project.ProjectForm{}), project.Store)
+		m.Get("", project.Index)
+		m.Get("/all", project.All)
+		m.Post("/remove/:id", project.Remove)
 	})
 
 	// 管理

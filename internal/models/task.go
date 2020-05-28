@@ -2,9 +2,10 @@ package models
 
 import (
 	"errors"
+	"fmt"
 	"strings"
 	"time"
-	"fmt"
+
 	"github.com/go-xorm/xorm"
 )
 
@@ -39,7 +40,8 @@ const (
 // 任务
 type Task struct {
 	Id               int                  `json:"id" xorm:"int pk autoincr"`
-	UserId           int	              `json:"user_id" xorm:"int notnull default 0"`                       // 创建ID
+	UserId           int                  `json:"user_id" xorm:"int notnull default 0"`                       // 创建ID
+	ProjectId        int                  `json:"project_id" xorm:"int notnull default 0"`                    // 所属项目
 	Name             string               `json:"name" xorm:"varchar(250) notnull"`                           // 任务名称
 	Level            TaskLevel            `json:"level" xorm:"tinyint notnull index default 1"`               // 任务等级 1: 主任务 2: 依赖任务
 	DependencyTaskId string               `json:"dependency_task_id" xorm:"varchar(64) notnull default ''"`   // 依赖任务ID,多个ID逗号分隔
@@ -61,10 +63,11 @@ type Task struct {
 	Status           Status               `json:"status" xorm:"tinyint notnull index default 0"` // 状态 1:正常 0:停止
 	Created          time.Time            `json:"created" xorm:"datetime notnull created"`       // 创建时间
 	Deleted          time.Time            `json:"deleted" xorm:"datetime deleted"`               // 删除时间
-	BaseModel        					   `json:"-" xorm:"-"`
-	Hosts            []TaskHostDetail 	   `json:"hosts" xorm:"-"`
-	NextRunTime      time.Time             `json:"next_run_time" xorm:"-"`
-	Account			 string                `json:"account" xorm:"-"`
+	BaseModel        `json:"-" xorm:"-"`
+	Hosts            []TaskHostDetail `json:"hosts" xorm:"-"`
+	NextRunTime      time.Time        `json:"next_run_time" xorm:"-"`
+	UserInfo         `xorm:"extends"`
+	ProjectInfo      `xorm:"extends"`
 }
 
 func taskHostTableName() []string {
@@ -115,11 +118,15 @@ func (task *Task) Enable(id int) (int64, error) {
 
 // 获取所有激活任务
 func (task *Task) ActiveList(page, pageSize int) ([]Task, error) {
+
+	list := make([]Task, 0)
+	// err := Db.Where("status = ? AND level = ?", Enabled, TaskLevelParent).Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
+
+	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id").Join("LEFT", []string{TablePrefix + "project", "p"}, "t.project_id = p.id")
 	params := CommonMap{"Page": page, "PageSize": pageSize}
 	task.parsePageAndPageSize(params)
-	list := make([]Task, 0)
-	err := Db.Where("status = ? AND level = ?", Enabled, TaskLevelParent).Limit(task.PageSize, task.pageLimitOffset()).
-		Find(&list)
+	fmt.Println(params)
+	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*,u.account,u.email,p.name").Where("t.status = ? AND t.level = ?", Enabled, TaskLevelParent).Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
 
 	if err != nil {
 		return list, err
@@ -148,14 +155,9 @@ func (task *Task) ActiveListByHostId(hostId int16) ([]Task, error) {
 
 func (task *Task) setHostsForTasks(tasks []Task) ([]Task, error) {
 	taskHostModel := new(TaskHost)
-	userModel := new(User)
-	users , erro := userModel.GetAllUsers()
-	
-	fmt.Println("==================")
-	fmt.Println(users)
-	fmt.Println(erro)
-	fmt.Println("==================")
-	
+	// userModel := new(User)
+	// users, _ := userModel.GetAllUsers()
+
 	var err error
 	for i, value := range tasks {
 		taskHostDetails, err := taskHostModel.GetHostIdsByTaskId(value.Id)
@@ -163,18 +165,12 @@ func (task *Task) setHostsForTasks(tasks []Task) ([]Task, error) {
 			return nil, err
 		}
 		tasks[i].Hosts = taskHostDetails
-		tasks[i].Account = users[tasks[i].UserId]
-		
+		// tasks[i].Account = users[tasks[i].UserId]
+
 	}
-	
-	fmt.Println("==================")
-	fmt.Println(tasks)
-	fmt.Println("==================")
 
 	return tasks, err
 }
-
-
 
 // 判断任务名称是否存在
 func (task *Task) NameExist(name string, id int) (bool, error) {
@@ -201,7 +197,8 @@ func (task *Task) GetStatus(id int) (Status, error) {
 
 func (task *Task) Detail(id int) (Task, error) {
 	t := Task{}
-	_, err := Db.Where("id=?", id).Get(&t)
+
+	_, err := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id").Join("LEFT", []string{TablePrefix + "project", "p"}, "t.project_id = p.id").Cols("t.*,u.account,u.email,p.name").Where("t.id=?", id).Get(&t)
 
 	if err != nil {
 		return t, err
@@ -216,15 +213,14 @@ func (task *Task) Detail(id int) (Task, error) {
 func (task *Task) List(params CommonMap) ([]Task, error) {
 	task.parsePageAndPageSize(params)
 	list := make([]Task, 0)
-	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id")
+	session := Db.Alias("t").Join("LEFT", taskHostTableName(), "t.id = th.task_id").Join("LEFT", userTableName(), "t.user_id = u.id").Join("LEFT", []string{TablePrefix + "project", "p"}, "t.project_id = p.id")
 	task.parseWhere(session, params)
 	fmt.Println(params)
-	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*,u.account").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
+	err := session.GroupBy("t.id").Desc("t.id").Cols("t.*,u.account,u.email,p.name").Limit(task.PageSize, task.pageLimitOffset()).Find(&list)
 
 	if err != nil {
 		return nil, err
 	}
-	
 
 	return task.setHostsForTasks(list)
 }
@@ -283,19 +279,23 @@ func (task *Task) parseWhere(session *xorm.Session, params CommonMap) {
 	}
 	protocol, ok := params["Protocol"]
 	if ok && protocol.(int) > 0 {
-		session.And("protocol = ?", protocol)
+		session.And("t.protocol = ?", protocol)
 	}
 	status, ok := params["Status"]
 	if ok && status.(int) > -1 {
-		session.And("status = ?", status)
+		session.And("t.status = ?", status)
 	}
 
 	tag, ok := params["Tag"]
 	if ok && tag.(string) != "" {
-		session.And("tag = ? ", tag)
+		session.And("t.tag = ? ", tag)
 	}
 	account, ok := params["Account"]
 	if ok && account.(string) != "" {
 		session.And("u.account LIKE ?", account.(string)+"%")
+	}
+	project, ok := params["ProjectId"]
+	if ok && project.(int) > 0 {
+		session.And("t.project_id = ?", project.(int))
 	}
 }
