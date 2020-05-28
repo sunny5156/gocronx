@@ -28,62 +28,62 @@
 </template>
 
 <script>
-  import projectSidebar from './sidebar'
-  import projectService from '../../api/project'
+import projectSidebar from './sidebar'
+import projectService from '../../api/project'
 
-  export default {
-    name: 'edit',
-    components: { projectSidebar },
-    data: function () {
-      return {
-        form: {
-          id: '',
-          name: '',
-          remark: ''
-        },
-        formRules: {
-          name: [
-            { required: true, message: '请输入项目名称', trigger: 'blur' }
-          ],
-          remark: [
-            { required: true, message: '请输入项目备注', trigger: 'blur' }
-          ]
-        }
-      }
-    },
-    created() {
-      const id = this.$route.params.id
-      if (!id) {
-        return
-      }
-      projectService.detail(id, (data) => {
-        if (!data) {
-          this.$message.error('数据不存在')
-          this.cancel()
-          return
-        }
-        this.form.id = data.id
-        this.form.name = data.name
-        this.form.remark = data.remark
-      })
-    },
-    methods: {
-      submit() {
-        this.$refs['form'].validate((valid) => {
-          if (!valid) {
-            return false
-          }
-          this.save()
-        })
+export default {
+  name: 'edit',
+  components: { projectSidebar },
+  data: function () {
+    return {
+      form: {
+        id: '',
+        name: '',
+        remark: ''
       },
-      save() {
-        projectService.update(this.form, () => {
-          this.$router.push('/project')
-        })
-      },
-      cancel() {
-        this.$router.push('/project')
+      formRules: {
+        name: [
+          { required: true, message: '请输入项目名称', trigger: 'blur' }
+        ],
+        remark: [
+          { required: true, message: '请输入项目备注', trigger: 'blur' }
+        ]
       }
     }
+  },
+  created () {
+    const id = this.$route.params.id
+    if (!id) {
+      return
+    }
+    projectService.detail(id, (data) => {
+      if (!data) {
+        this.$message.error('数据不存在')
+        this.cancel()
+        return
+      }
+      this.form.id = data.id
+      this.form.name = data.name
+      this.form.remark = data.remark
+    })
+  },
+  methods: {
+    submit () {
+      this.$refs['form'].validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.save()
+      })
+    },
+    save () {
+      projectService.update(this.form, () => {
+        this.$router.push('/project')
+      })
+    },
+    cancel () {
+      this.$router.push('/project')
+    }
   }
+}
 </script>
