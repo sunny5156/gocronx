@@ -36,12 +36,14 @@ type TaskForm struct {
 	NotifyType       int8 `binding:"In(1,2,3,4)"`
 	NotifyReceiverId string
 	NotifyKeyword    string
+	ProjectId        int
 }
 
 func (f TaskForm) Error(ctx *macaron.Context, errs binding.Errors) {
 	if len(errs) == 0 {
 		return
 	}
+
 	json := utils.JsonResponse{}
 	content := json.CommonFailure("表单验证失败, 请检测输入")
 
@@ -102,6 +104,13 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	if form.Protocol == models.TaskRPC && form.HostId == "" {
 		return json.CommonFailure("请选择主机名")
 	}
+	// if form.Protocol == models.TaskRPC && form.ProjectId == 0 {
+	// 	return json.CommonFailure("请选择所属项目")
+	// }
+
+	fmt.Println("--------------------------------")
+	fmt.Printf("%+v", form)
+	fmt.Println("--------------------------------")
 
 	taskModel.Name = form.Name
 	taskModel.Protocol = form.Protocol
@@ -124,6 +133,7 @@ func Store(ctx *macaron.Context, form TaskForm) string {
 	taskModel.DependencyStatus = form.DependencyStatus
 	taskModel.DependencyTaskId = strings.TrimSpace(form.DependencyTaskId)
 	taskModel.UserId = Uid(ctx) //增加任务创建者 @sunny5156 2019年10月7日16:19:56
+	taskModel.ProjectId = form.ProjectId
 	if taskModel.NotifyStatus > 0 && taskModel.NotifyType != 3 && taskModel.NotifyReceiverId == "" {
 		return json.CommonFailure("至少选择一个通知接收者")
 	}
@@ -286,6 +296,7 @@ func parseQueryParams(ctx *macaron.Context) models.CommonMap {
 	params["Protocol"] = ctx.QueryInt("protocol")
 	params["Tag"] = ctx.QueryTrim("tag")
 	params["Account"] = ctx.QueryTrim("account")
+	params["ProjectId"] = ctx.QueryInt("project_id")
 	status := ctx.QueryInt("status")
 	if status >= 0 {
 		status -= 1
@@ -293,7 +304,7 @@ func parseQueryParams(ctx *macaron.Context) models.CommonMap {
 	params["Status"] = status
 	base.ParsePageAndPageSize(ctx, params)
 
-	fmt.Println(params)
+	fmt.Printf("%T", params)
 
 	return params
 }

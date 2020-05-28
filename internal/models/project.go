@@ -17,13 +17,12 @@ type Project struct {
 	Created   time.Time `json:"created" xorm:"datetime notnull created"`        // 创建时间
 	BaseModel `json:"-" xorm:"-"`
 	Selected  bool `json:"-" xorm:"-"`
-	Userinfo  `xorm:"extends"`
+	UserInfo  `xorm:"extends"`
 }
 
-//用户信息
-type Userinfo struct {
-	Account string `json:"account" xorm:"<-"`
-	Email   string `json:"email" xorm:"<-"`
+//项目信息
+type ProjectInfo struct {
+	Name string `json:"project_name" xorm:"<-"`
 }
 
 func projectUserTableName() []string {

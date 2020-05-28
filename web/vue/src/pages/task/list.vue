@@ -26,6 +26,17 @@
             </el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="所属项目">
+          <el-select v-model.trim="searchParams.project_id">
+            <el-option label="全部" value=""></el-option>
+            <el-option
+              v-for="item in project"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="任务节点">
           <el-select v-model.trim="searchParams.host_id">
             <el-option label="全部" value=""></el-option>
@@ -128,6 +139,13 @@
           show-overflow-tooltip>
         </el-table-column>
         <el-table-column
+          prop="project_name"
+          label="所属项目">
+          <template slot-scope="scope">
+            <el-button type="text" title="点击可筛选当前创建者" @click="filtrateProject(scope.row.project_id)">{{ scope.row.project_name }}</el-button>
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="account"
           label="创建者">
           <template slot-scope="scope">
@@ -192,204 +210,212 @@
 </template>
 
 <script>
-  import taskSidebar from './sidebar'
-  import taskService from '../../api/task'
+import taskSidebar from './sidebar'
+import taskService from '../../api/task'
 
-  export default {
-    name: 'task-list',
-    data() {
-      return {
-        tasks: [],
-        hosts: [],
-        taskTotal: 0,
-        searchParams: {
-          page_size: 20,
-          page: 1,
-          id: '',
-          protocol: '',
-          name: '',
-          tag: '',
-          host_id: '',
-          status: '',
-          account: ''
+export default {
+  name: 'task-list',
+  data () {
+    return {
+      tasks: [],
+      hosts: [],
+      project: [],
+      taskTotal: 0,
+      searchParams: {
+        page_size: 20,
+        page: 1,
+        id: '',
+        protocol: '',
+        name: '',
+        tag: '',
+        host_id: '',
+        status: '',
+        account: '',
+        project_id: ''
+      },
+      isAdmin: this.$store.getters.user.isAdmin,
+      protocolList: [
+        {
+          value: '1',
+          label: 'http'
         },
-        isAdmin: this.$store.getters.user.isAdmin,
-        protocolList: [
-          {
-            value: '1',
-            label: 'http'
-          },
-          {
-            value: '2',
-            label: 'shell'
-          }
-        ],
-        statusList: [
-          {
-            value: '2',
-            label: '激活'
-          },
-          {
-            value: '1',
-            label: '停止'
-          }
-        ],
-        multipleSelection: []
-      }
-    },
-    components: { taskSidebar },
-    created() {
-      const hostId = this.$route.query.host_id
-      if (hostId) {
-        this.searchParams.host_id = hostId
-      }
+        {
+          value: '2',
+          label: 'shell'
+        }
+      ],
+      statusList: [
+        {
+          value: '2',
+          label: '激活'
+        },
+        {
+          value: '1',
+          label: '停止'
+        }
+      ],
+      multipleSelection: []
+    }
+  },
+  components: { taskSidebar },
+  created () {
+    const hostId = this.$route.query.host_id
+    if (hostId) {
+      this.searchParams.host_id = hostId
+    }
 
+    this.search()
+  },
+  filters: {
+    formatLevel (value) {
+      if (value === 1) {
+        return '主任务'
+      }
+      return '子任务'
+    },
+    formatTimeout (value) {
+      if (value > 0) {
+        return value + '秒'
+      }
+      return '不限制'
+    },
+    formatRetryTimesInterval (value) {
+      if (value > 0) {
+        return value + '秒'
+      }
+      return '系统默认'
+    },
+    formatMulti (value) {
+      if (value > 0) {
+        return '否'
+      }
+      return '是'
+    }
+  },
+  methods: {
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      console.log(val)
+    },
+    batchOpenStatus () {
+      this.multipleSelection.forEach((v) => {
+        if (!v.status) {
+          taskService.enable(v.id, () => {
+            v.status = 1
+          })
+        }
+      })
+    },
+    batchCloseStatus () {
+      this.multipleSelection.forEach((v) => {
+        if (v.status) {
+          taskService.disable(v.id, () => {
+            v.status = 0
+          })
+        }
+      })
+    },
+    filtrateUser (account) {
+      this.searchParams.account = account
       this.search()
     },
-    filters: {
-      formatLevel(value) {
-        if (value === 1) {
-          return '主任务'
-        }
-        return '子任务'
-      },
-      formatTimeout(value) {
-        if (value > 0) {
-          return value + '秒'
-        }
-        return '不限制'
-      },
-      formatRetryTimesInterval(value) {
-        if (value > 0) {
-          return value + '秒'
-        }
-        return '系统默认'
-      },
-      formatMulti(value) {
-        if (value > 0) {
-          return '否'
-        }
-        return '是'
+    filtrateProject (projectId) {
+      this.searchParams.project_id = projectId
+      this.search()
+    },
+    filtrateTag (tag) {
+      this.searchParams.tag = tag
+      this.search()
+    },
+    changeStatus (item) {
+      if (item.status) {
+        taskService.enable(item.id)
+      } else {
+        taskService.disable(item.id)
       }
     },
-    methods: {
-      handleSelectionChange(val) {
-        this.multipleSelection = val
-        console.log(val)
-      },
-      batchOpenStatus() {
-        this.multipleSelection.forEach((v) => {
-          if (!v.status) {
-            taskService.enable(v.id, () => {
-              v.status = 1
-            })
-          }
-        })
-      },
-      batchCloseStatus() {
-        this.multipleSelection.forEach((v) => {
-          if (v.status) {
-            taskService.disable(v.id, () => {
-              v.status = 0
-            })
-          }
-        })
-      },
-      filtrateUser(account) {
-        this.searchParams.account = account
-        this.search()
-      },
-      filtrateTag(tag) {
-        this.searchParams.tag = tag
-        this.search()
-      },
-      changeStatus(item) {
-        if (item.status) {
-          taskService.enable(item.id)
-        } else {
-          taskService.disable(item.id)
-        }
-      },
-      formatProtocol(row, col) {
-        if (row[col.property] === 2) {
-          return 'shell'
-        }
-        if (row.http_method === 1) {
-          return 'http-get'
-        }
-        return 'http-post'
-      },
-      changePage(page) {
-        this.searchParams.page = page
-        this.search()
-      },
-      changePageSize(pageSize) {
-        this.searchParams.page_size = pageSize
-        this.search()
-      },
-      search(e, callback = null) {
-        const that = this
-        taskService.list(that.searchParams, (tasks, hosts) => {
-          // debugger
-          that.tasks = tasks.data
-          that.taskTotal = tasks.total
-          that.hosts = hosts
-          this.$message.success('列表更新成功')
-          if (callback) {
-            callback()
-          }
-        })
-      },
-      clearSearch(formName) {
-        this.$refs[formName].resetFields()
-        this.searchParams = {
-          page_size: 20,
-          page: 1,
-          id: '',
-          protocol: '',
-          name: '',
-          tag: '',
-          host_id: '',
-          status: '',
-          account: ''
-        }
-        this.search(event, () => {
-          this.$message.success('重置成功')
-        })
-      },
-      runTask(item) {
-        this.$appConfirm(() => {
-          taskService.run(item.id, () => {
-            this.$message.success('任务已开始执行')
-          })
-        }, true)
-      },
-      remove(item) {
-        this.$appConfirm(() => {
-          taskService.remove(item.id, () => {
-            this.refresh()
-          })
-        })
-      },
-      jumpToLog(item) {
-        this.$router.push(`/task/log?task_id=${item.id}`)
-      },
-      refresh(event) {
-        this.search(event, () => {
-          this.$message.success('刷新成功')
-        })
-      },
-      toEdit(item) {
-        let path = ''
-        if (item === null) {
-          path = '/task/create'
-        } else {
-          path = `/task/edit/${item.id}`
-        }
-        this.$router.push(path)
+    formatProtocol (row, col) {
+      if (row[col.property] === 2) {
+        return 'shell'
       }
+      if (row.http_method === 1) {
+        return 'http-get'
+      }
+      return 'http-post'
+    },
+    changePage (page) {
+      this.searchParams.page = page
+      this.search()
+    },
+    changePageSize (pageSize) {
+      this.searchParams.page_size = pageSize
+      this.search()
+    },
+    search (e, callback = null) {
+      const that = this
+      taskService.list(that.searchParams, (tasks, hosts, project) => {
+        // debugger
+        that.tasks = tasks.data
+        that.taskTotal = tasks.total
+        that.hosts = hosts
+        that.project = project
+        this.$message.success('列表更新成功')
+        if (callback) {
+          callback()
+        }
+      })
+    },
+    clearSearch (formName) {
+      this.$refs[formName].resetFields()
+      this.searchParams = {
+        page_size: 20,
+        page: 1,
+        id: '',
+        protocol: '',
+        name: '',
+        tag: '',
+        host_id: '',
+        status: '',
+        account: '',
+        project_id: ''
+      }
+      this.search(event, () => {
+        this.$message.success('重置成功')
+      })
+    },
+    runTask (item) {
+      this.$appConfirm(() => {
+        taskService.run(item.id, () => {
+          this.$message.success('任务已开始执行')
+        })
+      }, true)
+    },
+    remove (item) {
+      this.$appConfirm(() => {
+        taskService.remove(item.id, () => {
+          this.refresh()
+        })
+      })
+    },
+    jumpToLog (item) {
+      this.$router.push(`/task/log?task_id=${item.id}`)
+    },
+    refresh (event) {
+      this.search(event, () => {
+        this.$message.success('刷新成功')
+      })
+    },
+    toEdit (item) {
+      let path = ''
+      if (item === null) {
+        path = '/task/create'
+      } else {
+        path = `/task/edit/${item.id}`
+      }
+      this.$router.push(path)
     }
   }
+}
 </script>
 
 <style scoped>
