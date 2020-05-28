@@ -8,7 +8,7 @@ import TaskEdit from '../pages/task/edit'
 import TaskLog from '../pages/taskLog/list'
 
 import HostList from '../pages/host/list'
-import HostOther  from '../pages/host/other'
+import HostOther from '../pages/host/other'
 import HostEdit from '../pages/host/edit'
 
 import UserList from '../pages/user/list'
@@ -27,6 +27,7 @@ import LoginLog from '../pages/system/loginLog'
 
 import ProjectList from '../pages/project/list'
 import ProjectEdit from '../pages/project/edit'
+import ProjectUserList from '../pages/project/userList'
 
 Vue.use(Router)
 
@@ -190,6 +191,14 @@ const router = new Router({
       path: '/project/edit/:id',
       name: 'project-edit',
       component: ProjectEdit,
+      meta: {
+        noNeedAdmin: true
+      }
+    },
+    {
+      path: '/project/user/list',
+      name: 'project-user-list',
+      component: ProjectUserList,
       meta: {
         noNeedAdmin: true
       }
