@@ -9,7 +9,7 @@
         <el-form-item label="项目名称" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="备注">
+        <el-form-item label="备注" prop="remark">
           <el-input
             type="textarea"
             :rows="5"
