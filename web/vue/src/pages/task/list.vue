@@ -231,7 +231,7 @@ export default {
         host_id: '',
         status: '',
         account: '',
-        project_id: ''
+        project_id: this.$route.query.project_id
       },
       isAdmin: this.$store.getters.user.isAdmin,
       protocolList: [
@@ -260,8 +260,12 @@ export default {
   components: { taskSidebar },
   created () {
     const hostId = this.$route.query.host_id
+    const projectId = this.$route.query.project_id
     if (hostId) {
       this.searchParams.host_id = hostId
+    }
+    if (projectId) {
+      this.searchParams.project_id = projectId
     }
 
     this.search()

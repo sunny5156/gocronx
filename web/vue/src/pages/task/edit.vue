@@ -295,7 +295,7 @@ export default {
         retry_interval: 0,
         remark: '',
         selectedHosts: [],
-        project_id: ''
+        project_id: this.$route.query.project_id
       },
       formRules: {
         name: [
