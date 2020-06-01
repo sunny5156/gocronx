@@ -17,6 +17,17 @@ export default {
     ], callback)
   },
 
+  create (callback) {
+    httpClient.batchGet([
+      {
+        uri: '/host/all'
+      },
+      {
+        uri: '/project/all'
+      }
+    ], callback)
+  },
+
   detail (id, callback) {
     httpClient.batchGet([
       {

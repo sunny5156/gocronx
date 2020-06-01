@@ -265,7 +265,7 @@ export default {
       this.searchParams.host_id = hostId
     }
     if (projectId) {
-      this.searchParams.project_id = projectId
+      this.searchParams.project_id = parseInt(projectId)
     }
 
     this.search()

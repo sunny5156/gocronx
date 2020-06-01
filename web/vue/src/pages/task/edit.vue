@@ -20,10 +20,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-        <el-form-item v-if="form.protocol === 2"
-                      label="所属项目"
-                      prop="project_id">
-          <el-select key="shell" v-model="form.project_id" filterable placeholder="请选择" style="width:100%;">
+        <el-form-item label="所属项目" prop="project_id">
+          <el-select v-model="form.project_id" filterable placeholder="请选择" style="width:100%;">
             <el-option
               v-for="item in project"
               :key="item.id"
@@ -43,10 +41,13 @@
               :closable="false">
             </el-alert>
             <el-alert
-              title="强依赖: 主任务执行成功，才会运行子任务
-弱依赖: 无论主任务执行是否成功，都会运行子任务"
+              title="提示"
               type="info"
               :closable="false">
+              <template slot='title'>
+                <div>强依赖: 主任务执行成功，才会运行子任务</div>
+                <div>弱依赖: 无论主任务执行是否成功，都会运行子任务</div>
+              </template>
             </el-alert>
             <br>
           </el-col>
@@ -82,15 +83,25 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col >
+            <el-alert
+              title="crontab表达式格式: 秒 分 时 天 月 周"
+              type="info"
+              :closable="false">
+            </el-alert>
+            <br>
+          </el-col>
+        </el-row>
         <el-row v-if="form.level === 1">
-          <el-col :span="24">
+          <el-col :span="9">
             <el-form-item label="crontab表达式" prop="spec">
               <el-input v-model="form.spec" placeholder="秒 分 时 天 月 周"></el-input>
             </el-form-item>
           </el-col>
         </el-row>
         <el-form-item label="执行方式">
-          <el-select v-model.trim="form.protocol" style="width:100%;">
+          <el-select v-model.trim="form.protocol" style="width:30%;">
             <el-option
               v-for="item in protocolList"
               :key="item.value"
@@ -102,7 +113,7 @@
         <el-form-item label="请求方法"
                       v-if="form.protocol === 1"
                       prop="http_method">
-          <el-select key="http-method" v-model.trim="form.http_method" style="width:100%;">
+          <el-select key="http-method" v-model.trim="form.http_method" style="width:30%;">
             <el-option
               v-for="item in httpMethods"
               :key="item.value"
@@ -123,6 +134,7 @@
             </el-option>
           </el-select>
         </el-form-item>
+
         <el-row>
           <el-col :span="24">
             <el-form-item label="命令" prop="command">
@@ -295,7 +307,7 @@ export default {
         retry_interval: 0,
         remark: '',
         selectedHosts: [],
-        project_id: this.$route.query.project_id
+        project_id: ''
       },
       formRules: {
         name: [
@@ -416,7 +428,8 @@ export default {
       slackChannels: [],
       selectedMailNotifyIds: [],
       selectedSlackNotifyIds: [],
-      project: []
+      project: [],
+      project_id: ''
     }
   },
   computed: {
@@ -432,63 +445,83 @@ export default {
   created () {
     const id = this.$route.params.id
 
-    taskService.detail(id, (taskData, hosts, project) => {
-      if (id && !taskData) {
-        this.$message.error('数据不存在')
-        this.cancel()
-        return
-      }
-      this.hosts = hosts || []
-      this.project = project || []
-      if (!taskData) {
-        return
-      }
-      this.form.id = taskData.id
-      this.form.name = taskData.name
-      this.form.tag = taskData.tag
-      this.form.level = taskData.level
-      if (taskData.dependency_status) {
-        this.form.dependency_status = taskData.dependency_status
-      }
-      this.form.dependency_task_id = taskData.dependency_task_id
-      this.form.spec = taskData.spec
-      this.form.protocol = taskData.protocol
-      if (taskData.http_method) {
-        this.form.http_method = taskData.http_method
-      }
-      this.form.command = taskData.command
-      this.form.timeout = taskData.timeout
-      this.form.multi = taskData.multi ? 1 : 2
-      this.form.notify_keyword = taskData.notify_keyword
-      this.form.notify_status = taskData.notify_status + 1
-      this.form.notify_receiver_id = taskData.notify_receiver_id
-      if (taskData.notify_type) {
-        this.form.notify_type = taskData.notify_type + 1
-      }
-      this.form.retry_times = taskData.retry_times
-      this.form.retry_interval = taskData.retry_interval
-      this.form.remark = taskData.remark
-      this.form.project_id = taskData.project_id
-      taskData.hosts = taskData.hosts || []
-      if (this.form.protocol === 2) {
-        taskData.hosts.forEach((v) => {
-          this.form.selectedHosts.push(v.host_id)
-        })
-      }
-
-      if (this.form.notify_status > 1) {
-        const notifyReceiverIds = this.form.notify_receiver_id.split(',')
-        if (this.form.notify_type === 2) {
-          notifyReceiverIds.forEach((v) => {
-            this.selectedMailNotifyIds.push(parseInt(v))
-          })
-        } else if (this.form.notify_type === 3) {
-          notifyReceiverIds.forEach((v) => {
-            this.selectedSlackNotifyIds.push(parseInt(v))
+    if (id > 0) {
+      taskService.detail(id, (taskData, hosts, project) => {
+        if (id && !taskData) {
+          this.$message.error('数据不存在')
+          this.cancel()
+          return
+        }
+        this.hosts = hosts || []
+        this.project = project || []
+        if (!taskData) {
+          return
+        }
+        this.form.id = taskData.id
+        this.form.name = taskData.name
+        this.form.tag = taskData.tag
+        this.form.level = taskData.level
+        if (taskData.dependency_status) {
+          this.form.dependency_status = taskData.dependency_status
+        }
+        this.form.dependency_task_id = taskData.dependency_task_id
+        this.form.spec = taskData.spec
+        this.form.protocol = taskData.protocol
+        if (taskData.http_method) {
+          this.form.http_method = taskData.http_method
+        }
+        this.form.command = taskData.command
+        this.form.timeout = taskData.timeout
+        this.form.multi = taskData.multi ? 1 : 2
+        this.form.notify_keyword = taskData.notify_keyword
+        this.form.notify_status = taskData.notify_status + 1
+        this.form.notify_receiver_id = taskData.notify_receiver_id
+        if (taskData.notify_type) {
+          this.form.notify_type = taskData.notify_type + 1
+        }
+        this.form.retry_times = taskData.retry_times
+        this.form.retry_interval = taskData.retry_interval
+        this.form.remark = taskData.remark
+        this.form.project_id = taskData.project_id
+        taskData.hosts = taskData.hosts || []
+        if (this.form.protocol === 2) {
+          taskData.hosts.forEach((v) => {
+            this.form.selectedHosts.push(v.host_id)
           })
         }
-      }
-    })
+
+        if (this.form.notify_status > 1) {
+          const notifyReceiverIds = this.form.notify_receiver_id.split(',')
+          if (this.form.notify_type === 2) {
+            notifyReceiverIds.forEach((v) => {
+              this.selectedMailNotifyIds.push(parseInt(v))
+            })
+          } else if (this.form.notify_type === 3) {
+            notifyReceiverIds.forEach((v) => {
+              this.selectedSlackNotifyIds.push(parseInt(v))
+            })
+          }
+        }
+      })
+    } else {
+      taskService.create((hosts, project) => {
+        this.hosts = hosts || []
+        this.project = project || []
+
+        this.form.project_id = parseInt(this.$route.query.project_id)
+        // setTimeout(() => {
+        //   // 项目id
+        //   if (this.$route.query.project_id > 0) {
+        //     if (this.project.length > 0) {
+        //       this.form.project_id = parseInt(this.$route.query.project_id)
+        //       // this.form.project_id = 'c23'
+        //       // this.project_id = this.$route.query.project_id
+        //       console.log(this.$route.query.project_id)
+        //     }
+        //   }
+        // }, 1000)
+      })
+    }
 
     notificationService.mail((data) => {
       this.mailUsers = data.mail_users
