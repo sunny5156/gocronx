@@ -13,9 +13,6 @@ import (
 	"gopkg.in/macaron.v1"
 )
 
-const testConnectionCommand = "echo hello"
-const testConnectionTimeout = 5
-
 // Index 项目列表
 func Index(ctx *macaron.Context) string {
 	projectModel := new(models.Project)

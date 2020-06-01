@@ -82,8 +82,8 @@ func (project *Project) List(params CommonMap) ([]Project, error) {
 
 	err := session.Cols("p.*,u.account,u.email,u.is_admin").Limit(project.PageSize, project.pageLimitOffset()).Find(&list)
 
-	fmt.Println("++++++++++++++++++++++++++++++++")
-	fmt.Println(list)
+	fmt.Println("+++++++++++++++project+++++++++++++++++")
+	fmt.Printf("%+V", list)
 	fmt.Println("++++++++++++++++++++++++++++++++")
 
 	return list, err

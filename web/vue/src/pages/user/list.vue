@@ -64,82 +64,82 @@
 </template>
 
 <script>
-  import userSidebar from './sidebar'
-  import userService from '../../api/user'
+import userSidebar from './sidebar'
+import userService from '../../api/user'
 
-  export default {
-    name: 'user-list',
-    components: { userSidebar },
-    data() {
-      return {
-        users: [],
-        userTotal: 0,
-        searchParams: {
-          page_size: 20,
-          page: 1
-        },
-        isAdmin: this.$store.getters.user.isAdmin
+export default {
+  name: 'user-list',
+  components: { userSidebar },
+  data () {
+    return {
+      users: [],
+      userTotal: 0,
+      searchParams: {
+        page_size: 20,
+        page: 1
+      },
+      isAdmin: this.$store.getters.user.isAdmin
+    }
+  },
+  created () {
+    this.search()
+  },
+  methods: {
+    changeStatus (item) {
+      if (item.status) {
+        userService.enable(item.id)
+      } else {
+        userService.disable(item.id)
       }
     },
-    created() {
+    formatRole (row, col) {
+      if (row[col.property] === 1) {
+        return '管理员'
+      }
+      return '普通用户'
+    },
+    changePage (page) {
+      this.searchParams.page = page
       this.search()
     },
-    methods: {
-      changeStatus(item) {
-        if (item.status) {
-          userService.enable(item.id)
-        } else {
-          userService.disable(item.id)
+    changePageSize (pageSize) {
+      this.searchParams.page_size = pageSize
+      this.search()
+    },
+    search (e, callback = null) {
+      userService.list(this.searchParams, (data) => {
+        this.users = data.data
+        this.userTotal = data.total
+        this.$message.success('列表更新成功')
+        if (callback) {
+          callback()
         }
-      },
-      formatRole(row, col) {
-        if (row[col.property] === 1) {
-          return '管理员'
-        }
-        return '普通用户'
-      },
-      changePage(page) {
-        this.searchParams.page = page
-        this.search()
-      },
-      changePageSize(pageSize) {
-        this.searchParams.page_size = pageSize
-        this.search()
-      },
-      search(e, callback = null) {
-        userService.list(this.searchParams, (data) => {
-          this.users = data.data
-          this.userTotal = data.total
-          this.$message.success('列表更新成功')
-          if (callback) {
-            callback()
-          }
+      })
+    },
+    remove (item) {
+      this.$appConfirm(() => {
+        userService.remove(item.id, () => {
+          this.refresh()
         })
-      },
-      remove(item) {
-        this.$appConfirm(() => {
-          userService.remove(item.id, () => {
-            this.refresh()
-          })
-        })
-      },
-      toEdit(item) {
-        let path = ''
-        if (item === null) {
-          path = '/user/create'
-        } else {
-          path = `/user/edit/${item.id}`
-        }
-        this.$router.push(path)
-      },
-      refresh(e) {
-        this.search(e, () => {
-          this.$message.success('刷新成功')
-        })
-      },
-      editPassword(item) {
-        this.$router.push(`/user/edit-password/${item.id}`)
+      })
+    },
+    toEdit (item) {
+      let path = ''
+      if (item === null) {
+        path = '/user/create'
+      } else {
+        path = `/user/edit/${item.id}`
       }
+      this.$router.push(path)
+    },
+    refresh (e) {
+      this.search(e, () => {
+        this.$message.success('刷新成功')
+      })
+    },
+    editPassword (item) {
+      this.$router.push(`/user/edit-password/${item.id}`)
     }
   }
+}
 </script>

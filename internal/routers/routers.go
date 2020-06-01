@@ -20,6 +20,7 @@ import (
 	"github.com/sunny5156/gocronx/internal/routers/loginlog"
 	"github.com/sunny5156/gocronx/internal/routers/manage"
 	"github.com/sunny5156/gocronx/internal/routers/project"
+	"github.com/sunny5156/gocronx/internal/routers/projectuser"
 	"github.com/sunny5156/gocronx/internal/routers/task"
 	"github.com/sunny5156/gocronx/internal/routers/tasklog"
 	"github.com/sunny5156/gocronx/internal/routers/user"
@@ -107,11 +108,22 @@ func Register(m *macaron.Macaron) {
 
 	// 项目
 	m.Group("/project", func() {
+		m.Get("", project.Index)
 		m.Get("/:id", project.Detail)
 		m.Post("/store", binding.Bind(project.ProjectForm{}), project.Store)
-		m.Get("", project.Index)
 		m.Get("/all", project.All)
 		m.Post("/remove/:id", project.Remove)
+		// m.Get("/user/:project_id", projectuser.Index)
+		// m.Post("/user/store", binding.Bind(projectuser.ProjectUserForm{}), projectuser.Store)
+		// m.Post("/user/remove/:id", projectuser.Remove)
+
+		// 项目用户
+		m.Group("/user", func() {
+			m.Get("/list/:id", projectuser.Index)
+			m.Post("/store", binding.Bind(projectuser.ProjectUserForm{}), projectuser.Store)
+			m.Post("/remove/:id", projectuser.Remove)
+		})
+
 	})
 
 	// 管理
