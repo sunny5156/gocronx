@@ -200,7 +200,7 @@
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="toEdit(scope.row)">编辑</el-button>
             <el-button size="mini" type="success" @click="runTask(scope.row)">手动执行</el-button>
-            <el-button size="mini" type="info" @click="jumpToLog('task-log', { id: scope.row.id })">查看日志</el-button>
+            <el-button size="mini" type="info" @click="jumpToLog(scope.row)">查看日志</el-button>
             <el-button size="mini" type="danger" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -317,7 +317,6 @@ export default {
             v.status = 0
           })
         }
-<<<<<<< HEAD
       })
     },
     filtrateUser (account) {
@@ -367,43 +366,6 @@ export default {
         this.$message.success('列表更新成功')
         if (callback) {
           callback()
-=======
-        return 'http-post'
-      },
-      changePage(page) {
-        this.searchParams.page = page
-        this.search()
-      },
-      changePageSize(pageSize) {
-        this.searchParams.page_size = pageSize
-        this.search()
-      },
-      search(e, callback = null) {
-        const that = this
-        that.searchParams.page = 1
-        taskService.list(that.searchParams, (tasks, hosts) => {
-          // debugger
-          that.tasks = tasks.data
-          that.taskTotal = tasks.total
-          that.hosts = hosts
-          this.$message.success('列表更新成功')
-          if (callback) {
-            callback()
-          }
-        })
-      },
-      clearSearch(formName) {
-        this.$refs[formName].resetFields()
-        this.searchParams = {
-          page_size: 20,
-          page: 1,
-          id: '',
-          protocol: '',
-          name: '',
-          tag: '',
-          host_id: '',
-          status: ''
->>>>>>> 73be2dc9c5ffbc8f9d327a1d94b19689310d2d70
         }
       })
     },
@@ -430,27 +392,12 @@ export default {
         taskService.run(item.id, () => {
           this.$message.success('任务已开始执行')
         })
-<<<<<<< HEAD
       }, true)
     },
     remove (item) {
       this.$appConfirm(() => {
         taskService.remove(item.id, () => {
           this.refresh()
-=======
-      },
-      jumpToLog(name, params) {
-        // this.$router.push(`/task/log?task_id=${params.id}`)
-        const { href } = this.$router.resolve({
-          name: name,
-          params: params || {}
-        })
-        window.open(`${href}?task_id=${params.id}`, '_blank')
-      },
-      refresh(event) {
-        this.search(event, () => {
-          this.$message.success('刷新成功')
->>>>>>> 73be2dc9c5ffbc8f9d327a1d94b19689310d2d70
         })
       })
     },
