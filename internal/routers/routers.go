@@ -80,6 +80,7 @@ func Register(m *macaron.Macaron) {
 		m.Post("/disable/:id", user.Disable)
 		m.Post("/editMyPassword", user.UpdateMyPassword)
 		m.Post("/editPassword/:id", user.UpdatePassword)
+		m.Post("/search", user.SearchUser)
 	})
 
 	// 定时任务
@@ -120,7 +121,7 @@ func Register(m *macaron.Macaron) {
 		// 项目用户
 		m.Group("/user", func() {
 			m.Get("/list/:id", projectuser.Index)
-			m.Post("/store", binding.Bind(projectuser.ProjectUserForm{}), projectuser.Store)
+			m.Post("/store", projectuser.Store)
 			m.Post("/remove/:id", projectuser.Remove)
 		})
 

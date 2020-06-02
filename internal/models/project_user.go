@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/go-xorm/xorm"
@@ -31,17 +30,17 @@ func (projectUser *ProjectUser) Create() (insertId int, err error) {
 
 // 删除
 func (projectUser *ProjectUser) Delete(id int) (int64, error) {
-	return Db.Id(id).Delete(new(Project))
+	return Db.Id(id).Delete(new(ProjectUser))
 }
 
-func (projectUser *ProjectUser) Find(id int) error {
-	_, err := Db.Alias("pu").Join("LEFT", []string{TablePrefix + "user", "u"}, "pu.user_id = u.id").Cols("pu.*,u.account,u.email,u.is_admin").Id(id).Get(projectUser)
+func (projectUser *ProjectUser) UserExists(userId int, projectId int) (bool, error) {
+	count, err := Db.Alias("pu").Join("LEFT", []string{TablePrefix + "user", "u"}, "pu.user_id = u.id").Cols("pu.*,u.account,u.email,u.is_admin").Where("pu.user_id = ?", userId).Where("pu.project_id = ?", projectId).Count(projectUser)
 
-	return err
+	return count > 0, err
 }
 
-func (projectUser *ProjectUser) UserExists(userId int) (bool, error) {
-	count, err := Db.Where("user_id = ?", userId).Count(projectUser)
+func (projectUser *ProjectUser) Find(id int) (bool, error) {
+	count, err := Db.Where("id = ?", id).Count(projectUser)
 	return count > 0, err
 }
 
@@ -52,11 +51,6 @@ func (projectUser *ProjectUser) List(params CommonMap) ([]ProjectUser, error) {
 	projectUser.parseWhere(session, params)
 
 	err := session.Limit(projectUser.PageSize, projectUser.pageLimitOffset()).Find(&list)
-
-	fmt.Println("++++++++++++++++++++++++++++++++")
-	fmt.Printf("%v", list)
-	fmt.Println("++++++++++++++++++++++++++++++++")
-
 	return list, err
 }
 

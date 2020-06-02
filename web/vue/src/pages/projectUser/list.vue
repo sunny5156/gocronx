@@ -57,7 +57,7 @@
 import projectUserSidebar from './sidebar'
 import projectUserService from '../../api/projectuser'
 import projectService from '../../api/project'
-import addTemplateDialog from '../../components/common/addTemplate'
+import addTemplateDialog from './add'
 
 export default {
   name: 'project-user-list',
@@ -126,14 +126,10 @@ export default {
       })
     },
     toAdd (projectId) {
-      // let path = ''
-      // path = `/project/user/create/${projectId}`
-
-      // this.$router.push(path)
       this.addDialogOption = {
         open: true,
         data: {
-          title: '添加项目',
+          title: '添加用户',
           id: projectId
         }
       }

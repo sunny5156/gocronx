@@ -131,6 +131,7 @@ func (user *User) generateSalt() string {
 	return utils.RandString(PasswordSaltLength)
 }
 
+//获取所有用户
 func (user *User) GetAllUsers() (map[int]string, error) {
 	list := make([]User, 0)
 	err := Db.Desc("id").Cols("id,account,email").Find(&list)
@@ -143,4 +144,12 @@ func (user *User) GetAllUsers() (map[int]string, error) {
 	}
 
 	return users, err
+}
+
+//搜索用户
+func (user *User) SearchUsers(params CommonMap) ([]User, error) {
+	list := make([]User, 0)
+	err := Db.Desc("id").Cols("id,account,name,email").Find(&list)
+
+	return list, err
 }

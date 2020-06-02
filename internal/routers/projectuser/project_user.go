@@ -1,8 +1,8 @@
 package projectuser
 
 import (
-	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/go-macaron/binding"
 	"github.com/sunny5156/gocronx/internal/models"
@@ -17,6 +17,11 @@ type ProjectUserForm struct {
 	UserId    int
 	ProjectId int
 	IsManager int
+}
+
+type ProjectUsersForm struct {
+	ProjectId     int
+	SelectUserIds []int
 }
 
 // Error 表单验证错误处理
@@ -44,10 +49,10 @@ func Index(ctx *macaron.Context) string {
 	total, err := projectUserModel.Total(queryParams)
 	projectUsers, err := projectUserModel.List(queryParams)
 
-	fmt.Println("-----------------ceshi---------------")
-	fmt.Print(projectId)
-	fmt.Printf("%T", projectUsers)
-	fmt.Println("-----------------ceshi---------------")
+	// fmt.Println("-----------------ceshi---------------")
+	// fmt.Print(projectId)
+	// fmt.Printf("%T", projectUsers)
+	// fmt.Println("-----------------ceshi---------------")
 
 	if err != nil {
 		logger.Error(err)
@@ -61,43 +66,34 @@ func Index(ctx *macaron.Context) string {
 }
 
 //添加项目用户
-func Store(ctx *macaron.Context, form ProjectUserForm) string {
+func Store(ctx *macaron.Context) string {
 
 	json := utils.JsonResponse{}
-	projectUserModel := new(models.ProjectUser)
-	userId := form.UserId
-	projectId := form.ProjectId
 
-	UserExist, err := projectUserModel.UserExists(form.UserId)
+	projectId := ctx.QueryInt("projectId")
+	userIds := strings.Split(ctx.QueryTrim("userIds"), ",")
 
-	projectUserModel.ProjectId = projectId
-	projectUserModel.UserId = userId
+	for _, userId := range userIds {
 
-	id := 0
+		tmpUserId, _ := strconv.Atoi(userId)
 
-	if err != nil {
-		return json.CommonFailure("操作失败", err)
-	}
-	if UserExist {
-		return json.CommonFailure("用户已添加")
-	} else {
-		id, err = projectUserModel.Create()
-	}
+		oldProjectUserModel := new(models.ProjectUser)
+		num, _ := oldProjectUserModel.UserExists(tmpUserId, projectId)
+		if !num {
+			projectUserModel := new(models.ProjectUser)
+			projectUserModel.ProjectId = projectId
+			projectUserModel.UserId = tmpUserId
+			projectUserModel.IsManager = 0
+			projectUserModel.Create()
+		}
 
-	if err != nil {
-		return json.CommonFailure("保存失败", err)
 	}
 
-	return json.Success("保存成功", id)
+	return json.Success("保存成功", 0)
 
 }
 
-// 删除项目用户
-// func RemoveProjectUser(ctx *macaron.Context) string {
-// 	return ''
-// }
-
-// Remove 删除项目
+// Remove 删除项目用户
 func Remove(ctx *macaron.Context) string {
 	id, err := strconv.Atoi(ctx.Params(":id"))
 	json := utils.JsonResponse{}
@@ -105,13 +101,13 @@ func Remove(ctx *macaron.Context) string {
 		return json.CommonFailure("参数错误", err)
 	}
 
-	projectModel := new(models.Project)
-	err = projectModel.Find(int(id))
-	if err != nil {
-		return json.CommonFailure("项目不存在")
+	projectUserModel := new(models.ProjectUser)
+	isExists, _ := projectUserModel.Find(int(id))
+	if !isExists {
+		return json.CommonFailure("项目用户不存在")
 	}
 
-	_, err = projectModel.Delete(id)
+	_, err = projectUserModel.Delete(id)
 	if err != nil {
 		return json.CommonFailure("操作失败", err)
 	}
