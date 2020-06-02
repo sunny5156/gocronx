@@ -44,11 +44,12 @@
         </el-table-column>
         <el-table-column label="操作" width="300" >
           <template slot-scope="scope">
-            <el-button size="mini" type="danger" :disabled="scope.row.is_manager" @click="remove(scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" :disabled="scope.row.is_manager === 1" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-main>
+    <add-template-dialog v-bind.sync="addDialogOption" @reload="search"></add-template-dialog>
   </el-container>
 </template>
 
@@ -56,10 +57,11 @@
 import projectUserSidebar from './sidebar'
 import projectUserService from '../../api/projectuser'
 import projectService from '../../api/project'
+import addTemplateDialog from '../../components/common/addTemplate'
 
 export default {
   name: 'project-user-list',
-  components: { projectUserSidebar },
+  components: { projectUserSidebar, addTemplateDialog },
   data () {
     return {
       users: [],
@@ -70,6 +72,10 @@ export default {
         project_id: this.$route.query.project_id,
         page_size: 20,
         page: 1
+      },
+      addDialogOption: {
+        open: false,
+        data: {}
       }
     }
   },
@@ -120,10 +126,17 @@ export default {
       })
     },
     toAdd (projectId) {
-      let path = ''
-      path = `/project/user/create/${projectId}`
+      // let path = ''
+      // path = `/project/user/create/${projectId}`
 
-      this.$router.push(path)
+      // this.$router.push(path)
+      this.addDialogOption = {
+        open: true,
+        data: {
+          title: '添加项目',
+          id: projectId
+        }
+      }
     },
     refresh (e) {
       this.search(e, () => {

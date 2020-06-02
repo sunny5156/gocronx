@@ -109,6 +109,7 @@ export default {
       })
     },
     toEdit (item) {
+      console.log(item)
       let path = ''
       if (item === null) {
         path = '/project/create'
