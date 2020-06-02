@@ -9,7 +9,7 @@ import (
 
 // 项目
 type Project struct {
-	Id        int16     `json:"id" xorm:"int pk autoincr"`
+	Id        int       `json:"id" xorm:"int pk autoincr"`
 	UserId    int       `json:"user_id" xorm:"int notnull default 0"`           // 创建ID
 	Name      string    `json:"name" xorm:"varchar(64) notnull"`                // 项目名称
 	Remark    string    `json:"remark" xorm:"varchar(500) notnull default '' "` // 备注
@@ -34,7 +34,7 @@ func proUserTableName() []string {
 }
 
 // 新增
-func (project *Project) Create() (insertId int16, err error) {
+func (project *Project) Create() (insertId int, err error) {
 	_, err = Db.Insert(project)
 	if err == nil {
 		insertId = project.Id
@@ -43,7 +43,7 @@ func (project *Project) Create() (insertId int16, err error) {
 	return
 }
 
-func (project *Project) UpdateBean(id int16) (int64, error) {
+func (project *Project) UpdateBean(id int) (int64, error) {
 	return Db.ID(id).Cols("name,remark,status").Update(project)
 }
 
@@ -64,7 +64,7 @@ func (project *Project) Find(id int) error {
 	return err
 }
 
-func (project *Project) NameExists(name string, id int16) (bool, error) {
+func (project *Project) NameExists(name string, id int) (bool, error) {
 	if id == 0 {
 		count, err := Db.Where("name = ?", name).Count(project)
 		return count > 0, err
