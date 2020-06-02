@@ -1,7 +1,6 @@
 <template>
   <el-dialog
     :title="data.title"
-    class="dialog-add-upload-plan"
     :visible="open"
     :before-close="onClose"
     :close-on-click-modal="false"
