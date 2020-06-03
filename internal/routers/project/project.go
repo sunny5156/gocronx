@@ -13,9 +13,6 @@ import (
 	"gopkg.in/macaron.v1"
 )
 
-const testConnectionCommand = "echo hello"
-const testConnectionTimeout = 5
-
 // Index 项目列表
 func Index(ctx *macaron.Context) string {
 	projectModel := new(models.Project)
@@ -66,7 +63,7 @@ func Detail(ctx *macaron.Context) string {
 }
 
 type ProjectForm struct {
-	Id     int16
+	Id     int
 	Name   string `binding:"Required;MaxSize(64)"`
 	Remark string `binding:"Required;MaxSize(500)"`
 	Status models.Status
@@ -87,6 +84,7 @@ func Store(ctx *macaron.Context, form ProjectForm) string {
 
 	json := utils.JsonResponse{}
 	projectModel := new(models.Project)
+	projectUserModel := new(models.ProjectUser)
 	id := form.Id
 
 	nameExist, err := projectModel.NameExists(form.Name, form.Id)
@@ -96,10 +94,10 @@ func Store(ctx *macaron.Context, form ProjectForm) string {
 	if nameExist {
 		return json.CommonFailure("项目名已存在")
 	}
-
+	uid := Uid(ctx)
 	projectModel.Name = strings.TrimSpace(form.Name)
 	projectModel.Remark = strings.TrimSpace(form.Remark)
-	projectModel.UserId = Uid(ctx) //增加任务创建者 @sunny5156 2019年10月7日16:19:56
+	projectModel.UserId = uid //增加任务创建者 @sunny5156 2019年10月7日16:19:56
 	// isCreate := false
 	oldprojectModel := new(models.Project)
 	err = oldprojectModel.Find(int(id))
@@ -112,7 +110,17 @@ func Store(ctx *macaron.Context, form ProjectForm) string {
 	} else {
 		// isCreate = true
 		id, err = projectModel.Create()
+
+		if id > 0 {
+			//add project user
+			projectUserModel.ProjectId = id
+			projectUserModel.UserId = uid
+			projectUserModel.IsManager = 1
+
+			projectUserModel.Create()
+		}
 	}
+
 	if err != nil {
 		return json.CommonFailure("保存失败", err)
 	}

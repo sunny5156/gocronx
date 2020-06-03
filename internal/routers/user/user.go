@@ -336,3 +336,22 @@ func RestoreToken(ctx *macaron.Context) error {
 
 	return nil
 }
+
+//检索
+func SearchUser(ctx *macaron.Context) string {
+
+	// keyword := ctx.QueryTrim("keyword")
+
+	userModel := new(models.User)
+	users, err := userModel.SearchUsers(nil)
+	if err != nil {
+		logger.Error(err)
+	}
+
+	jsonResp := utils.JsonResponse{}
+
+	return jsonResp.Success(utils.SuccessContent, map[string]interface{}{
+		"data": users,
+	})
+
+}

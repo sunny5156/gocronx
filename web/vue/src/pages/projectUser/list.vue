@@ -1,9 +1,13 @@
 <template>
   <el-container>
-    <user-sidebar></user-sidebar>
+    <project-user-sidebar></project-user-sidebar>
     <el-main>
+      <el-row>
+        <el-col>
+        </el-col>
+      </el-row>
       <el-row type="flex" justify="end">
-        <el-button size="mini" type="primary" @click="toEdit(null)">新增</el-button>
+        <el-button size="mini" type="primary" @click="toAdd(projectId)">新增</el-button>
         <el-button size="mini" type="info" @click="refresh">刷新</el-button>
       </el-row>
       <el-pagination
@@ -23,7 +27,7 @@
         style="width: 100%; margin-top:10px;">
         <el-table-column
           prop="id"
-          label="用户id">
+          label="id">
         </el-table-column>
         <el-table-column
           prop="account"
@@ -38,47 +42,41 @@
           :formatter="formatRole"
           label="角色">
         </el-table-column>
-        <el-table-column
-          label="状态">
+        <el-table-column label="操作" width="300" >
           <template slot-scope="scope">
-            <el-switch
-              v-model="scope.row.status"
-              :active-value="1"
-              :inactive-vlaue="0"
-              active-color="#13ce66"
-              @change="changeStatus(scope.row)"
-              inactive-color="#ff4949">
-            </el-switch>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="300" v-if="this.isAdmin">
-          <template slot-scope="scope">
-            <el-button size="mini" type="primary" @click="toEdit(scope.row)">编辑</el-button>
-            <el-button size="mini" type="success" @click="editPassword(scope.row)">修改密码</el-button>
-            <el-button size="mini" type="danger" @click="remove(scope.row)">删除</el-button>
+            <el-button size="mini" type="danger" :disabled="scope.row.is_manager === 1" @click="remove(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-main>
+    <add-template-dialog v-bind.sync="addDialogOption" @reload="search"></add-template-dialog>
   </el-container>
 </template>
 
 <script>
-import userSidebar from './sidebar'
-import userService from '../../api/user'
+import projectUserSidebar from './sidebar'
+import projectUserService from '../../api/projectuser'
+import projectService from '../../api/project'
+import addTemplateDialog from './add'
 
 export default {
-  name: 'user-list',
-  components: { userSidebar },
+  name: 'project-user-list',
+  components: { projectUserSidebar, addTemplateDialog },
   data () {
     return {
       users: [],
       userTotal: 0,
+      project: [],
+      projectId: this.$route.query.project_id,
       searchParams: {
+        project_id: this.$route.query.project_id,
         page_size: 20,
         page: 1
       },
-      isAdmin: this.$store.getters.user.isAdmin
+      addDialogOption: {
+        open: false,
+        data: {}
+      }
     }
   },
   created () {
@@ -87,9 +85,9 @@ export default {
   methods: {
     changeStatus (item) {
       if (item.status) {
-        userService.enable(item.id)
+        projectUserService.enable(item.id)
       } else {
-        userService.disable(item.id)
+        projectUserService.disable(item.id)
       }
     },
     formatRole (row, col) {
@@ -107,7 +105,11 @@ export default {
       this.search()
     },
     search (e, callback = null) {
-      userService.list(this.searchParams, (data) => {
+      const projectId = this.$route.query.project_id
+      projectService.detail(projectId, (project) => {
+        this.project = project
+      })
+      projectUserService.list(projectId, this.searchParams, (data) => {
         this.users = data.data
         this.userTotal = data.total
         this.$message.success('列表更新成功')
@@ -118,27 +120,24 @@ export default {
     },
     remove (item) {
       this.$appConfirm(() => {
-        userService.remove(item.id, () => {
+        projectUserService.remove(item.id, () => {
           this.refresh()
         })
       })
     },
-    toEdit (item) {
-      let path = ''
-      if (item === null) {
-        path = '/user/create'
-      } else {
-        path = `/user/edit/${item.id}`
+    toAdd (projectId) {
+      this.addDialogOption = {
+        open: true,
+        data: {
+          title: '添加用户',
+          id: projectId
+        }
       }
-      this.$router.push(path)
     },
     refresh (e) {
       this.search(e, () => {
         this.$message.success('刷新成功')
       })
-    },
-    editPassword (item) {
-      this.$router.push(`/user/edit-password/${item.id}`)
     }
   }
 }

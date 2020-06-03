@@ -42,73 +42,73 @@
 </template>
 
 <script>
-  import userSidebar from './sidebar'
-  import userService from '../../api/user'
+import userSidebar from './sidebar'
+import userService from '../../api/user'
 
-  export default {
-    name: 'user-edit',
-    components: { userSidebar },
-    data: function () {
-      return {
-        form: {
-          id: '',
-          account: '',
-          email: '',
-          is_admin: 0,
-          password: '',
-          confirm_password: '',
-          status: 1
-        },
-        formRules: {
-          account: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
-          ],
-          email: [
-            { type: 'email', required: true, message: '请输入有效邮箱地址', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ],
-          confirm_password: [
-            { required: true, message: '请再次输入密码', trigger: 'blur' }
-          ]
-        }
-      }
-    },
-    created() {
-      const id = this.$route.params.id
-      if (!id) {
-        return
-      }
-      userService.detail(id, (data) => {
-        if (!data) {
-          this.$message.error('数据不存在')
-          return
-        }
-        this.form.id = data.id
-        this.form.account = data.account
-        this.form.email = data.email
-        this.form.is_admin = data.is_admin
-        this.form.status = data.status
-      })
-    },
-    methods: {
-      submit() {
-        this.$refs['form'].validate((valid) => {
-          if (!valid) {
-            return false
-          }
-          this.save()
-        })
+export default {
+  name: 'user-edit',
+  components: { userSidebar },
+  data: function () {
+    return {
+      form: {
+        id: '',
+        account: '',
+        email: '',
+        is_admin: 0,
+        password: '',
+        confirm_password: '',
+        status: 1
       },
-      save() {
-        userService.update(this.form, () => {
-          this.$router.push('/user')
-        })
-      },
-      cancel() {
-        this.$router.push('/user')
+      formRules: {
+        account: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        email: [
+          { type: 'email', required: true, message: '请输入有效邮箱地址', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        confirm_password: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' }
+        ]
       }
     }
+  },
+  created () {
+    const id = this.$route.params.id
+    if (!id) {
+      return
+    }
+    userService.detail(id, (data) => {
+      if (!data) {
+        this.$message.error('数据不存在')
+        return
+      }
+      this.form.id = data.id
+      this.form.account = data.account
+      this.form.email = data.email
+      this.form.is_admin = data.is_admin
+      this.form.status = data.status
+    })
+  },
+  methods: {
+    submit () {
+      this.$refs['form'].validate((valid) => {
+        if (!valid) {
+          return false
+        }
+        this.save()
+      })
+    },
+    save () {
+      userService.update(this.form, () => {
+        this.$router.push('/user')
+      })
+    },
+    cancel () {
+      this.$router.push('/user')
+    }
   }
+}
 </script>

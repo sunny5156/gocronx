@@ -27,7 +27,9 @@ import LoginLog from '../pages/system/loginLog'
 
 import ProjectList from '../pages/project/list'
 import ProjectEdit from '../pages/project/edit'
-import ProjectUserList from '../pages/project/userList'
+
+import ProjectUserList from '../pages/projectUser/list'
+import ProjectUserEdit from '../pages/projectUser/edit'
 
 Vue.use(Router)
 
@@ -199,6 +201,14 @@ const router = new Router({
       path: '/project/user/list',
       name: 'project-user-list',
       component: ProjectUserList,
+      meta: {
+        noNeedAdmin: true
+      }
+    },
+    {
+      path: '/project/user/create/:id',
+      name: 'project-user-create',
+      component: ProjectUserEdit,
       meta: {
         noNeedAdmin: true
       }
