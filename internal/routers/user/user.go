@@ -124,6 +124,7 @@ func Store(ctx *macaron.Context, form UserForm) string {
 	} else {
 		_, err = userModel.Update(form.Id, models.CommonMap{
 			"account":  form.Account,
+			"name":     form.Name,
 			"email":    form.Email,
 			"status":   form.Status,
 			"is_admin": form.IsAdmin,
