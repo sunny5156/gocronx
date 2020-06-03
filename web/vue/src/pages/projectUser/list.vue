@@ -60,7 +60,7 @@
 
 <script>
 import projectUserSidebar from './sidebar'
-import projectUserService from '../../api/projectuser'
+import projectUserService from '../../api/projectUser'
 import projectService from '../../api/project'
 import addTemplateDialog from './add'
 

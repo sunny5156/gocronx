@@ -34,7 +34,7 @@
 <script>
 import userService from '../../api/user'
 import projectService from '../../api/project'
-import projectUserService from '../../api/projectuser'
+import projectUserService from '../../api/projectUser'
 export default {
   data () {
     return {
