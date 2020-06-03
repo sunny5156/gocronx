@@ -20,6 +20,7 @@ const tokenDuration = 4 * time.Hour
 type UserForm struct {
 	Id              int
 	Account         string `binding:"Required;MaxSize(32)"` // 用户名
+	Name            string // 姓名
 	Password        string // 密码
 	ConfirmPassword string // 确认密码
 	Email           string `binding:"Required;MaxSize(50)"` // 邮箱
@@ -75,6 +76,7 @@ func Detail(ctx *macaron.Context) string {
 // 保存任务
 func Store(ctx *macaron.Context, form UserForm) string {
 	form.Account = strings.TrimSpace(form.Account)
+	form.Name = strings.TrimSpace(form.Name)
 	form.Email = strings.TrimSpace(form.Email)
 	form.Password = strings.TrimSpace(form.Password)
 	form.ConfirmPassword = strings.TrimSpace(form.ConfirmPassword)
@@ -85,7 +87,7 @@ func Store(ctx *macaron.Context, form UserForm) string {
 		return json.CommonFailure(utils.FailureContent, err)
 	}
 	if nameExists > 0 {
-		return json.CommonFailure("用户名已存在")
+		return json.CommonFailure("账号已存在")
 	}
 
 	emailExists, err := userModel.EmailExists(form.Email, form.Id)
@@ -108,6 +110,7 @@ func Store(ctx *macaron.Context, form UserForm) string {
 		}
 	}
 	userModel.Account = form.Account
+	userModel.Name = form.Name
 	userModel.Email = form.Email
 	userModel.Password = form.Password
 	userModel.IsAdmin = form.IsAdmin

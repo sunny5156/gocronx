@@ -6,8 +6,11 @@
         <el-form-item>
           <el-input v-model="form.id" type="hidden"></el-input>
         </el-form-item>
-        <el-form-item label="用户名" prop="account">
+        <el-form-item label="账号" prop="account">
           <el-input v-model="form.account"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="form.email"></el-input>
@@ -53,6 +56,7 @@ export default {
       form: {
         id: '',
         account: '',
+        name: '',
         email: '',
         is_admin: 0,
         password: '',
@@ -62,6 +66,9 @@ export default {
       formRules: {
         account: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
         ],
         email: [
           { type: 'email', required: true, message: '请输入有效邮箱地址', trigger: 'blur' }
@@ -87,6 +94,7 @@ export default {
       }
       this.form.id = data.id
       this.form.account = data.account
+      this.form.name = data.name
       this.form.email = data.email
       this.form.is_admin = data.is_admin
       this.form.status = data.status

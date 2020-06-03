@@ -12,6 +12,7 @@ const PasswordSaltLength = 6
 type User struct {
 	Id        int       `json:"id" xorm:"pk autoincr notnull "`
 	Account   string    `json:"account" xorm:"varchar(32) notnull unique"`           // 用户名
+	Name      string    `json:"name" xorm:"varchar(32) notnull"`                     // 姓名
 	Password  string    `json:"-" xorm:"char(32) notnull "`                          // 密码
 	Salt      string    `json:"-" xorm:"char(6) notnull "`                           // 密码盐值
 	Email     string    `json:"email" xorm:"varchar(50) notnull unique default '' "` // 邮箱
@@ -134,7 +135,7 @@ func (user *User) generateSalt() string {
 //获取所有用户
 func (user *User) GetAllUsers() (map[int]string, error) {
 	list := make([]User, 0)
-	err := Db.Desc("id").Cols("id,account,email").Find(&list)
+	err := Db.Desc("id").Cols("id,account,name,email").Find(&list)
 
 	users := make(map[int]string)
 
