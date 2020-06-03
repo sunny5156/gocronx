@@ -4,11 +4,16 @@
     <el-main>
       <el-row>
         <el-col>
+          项目名称:{{ project.name }}
+        </el-col>
+        <el-col>
+          项目所属人:{{ project.account }}
         </el-col>
       </el-row>
       <el-row type="flex" justify="end">
         <el-button size="mini" type="primary" @click="toAdd(projectId)">新增</el-button>
-        <el-button size="mini" type="info" @click="refresh">刷新</el-button>
+        <el-button size="mini" type="warning" @click="refresh">刷新</el-button>
+        <el-button size="mini" type="info" @click="goback">返回</el-button>
       </el-row>
       <el-pagination
         background
@@ -138,6 +143,9 @@ export default {
       this.search(e, () => {
         this.$message.success('刷新成功')
       })
+    },
+    goback (e) {
+      this.$router.push('/project')
     }
   }
 }

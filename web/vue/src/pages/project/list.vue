@@ -15,7 +15,7 @@
       </el-form>
       <el-row type="flex" justify="end">
         <el-button size="mini" type="primary" v-if="this.$store.getters.user.isAdmin" @click="toEdit(null)">新增</el-button>
-        <el-button size="mini" type="info" @click="refresh">刷新</el-button>
+        <el-button size="mini" type="warning" @click="refresh">刷新</el-button>
       </el-row>
       <el-pagination
         background

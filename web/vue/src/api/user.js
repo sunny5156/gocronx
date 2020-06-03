@@ -38,5 +38,8 @@ export default {
 
   editMyPassword (data, callback) {
     httpClient.post(`/user/editMyPassword`, data, callback)
+  },
+  search (data, callback) {
+    httpClient.post(`/user/search`, data, callback)
   }
 }

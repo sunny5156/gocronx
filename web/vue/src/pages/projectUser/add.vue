@@ -10,7 +10,6 @@
     <template>
       <el-form ref="form" :model="form"  label-width="100px" size="small" @submit.native.prevent>
          <el-input v-model="form.projectId" prop="projectId" type="hidden"></el-input>
-         <!-- <el-form-item>项目名称: {{ $project.name }}</el-form-item> -->
         <el-form-item label="选择用户"
                       prop="selectUserIds">
           <el-select  v-model="form.selectUserIds" filterable multiple placeholder="请选择" style="width:100%;">

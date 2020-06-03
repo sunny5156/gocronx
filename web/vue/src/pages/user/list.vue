@@ -4,7 +4,7 @@
     <el-main>
       <el-row type="flex" justify="end">
         <el-button size="mini" type="primary" @click="toEdit(null)">新增</el-button>
-        <el-button size="mini" type="info" @click="refresh">刷新</el-button>
+        <el-button size="mini" type="warning" @click="refresh">刷新</el-button>
       </el-row>
       <el-pagination
         background
