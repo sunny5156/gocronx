@@ -27,7 +27,11 @@
         </el-table-column>
         <el-table-column
           prop="account"
-          label="用户名">
+          label="账号">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="姓名">
         </el-table-column>
         <el-table-column
           prop="email"
