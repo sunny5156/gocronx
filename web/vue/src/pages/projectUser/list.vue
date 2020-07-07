@@ -4,10 +4,10 @@
     <el-main>
       <el-row>
         <el-col>
-          项目名称:{{ project.name }}
+          <p class="project-title"><span class="label">项目名称: </span><span class="content">{{ project.name }}</span></p>
         </el-col>
         <el-col>
-          项目所属人:{{ project.account }}
+          <p class="project-title"><span class="label">项目所属人: </span><span class="content">{{ project.account }}</span></p>
         </el-col>
       </el-row>
       <el-row type="flex" justify="end">
@@ -154,3 +154,17 @@ export default {
   }
 }
 </script>
+<style>
+.project-title{
+  display: flex;
+  margin: 0;
+  font-size: 16px;
+  color: #606266;
+}
+.project-title .content{
+  font-size:14px;
+}
+.project-title .label{
+  width:100px;
+}
+</style>
