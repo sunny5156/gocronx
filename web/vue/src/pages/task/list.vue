@@ -82,6 +82,7 @@
       </el-pagination>
       <el-table
         :data="tasks"
+        v-loading="tableLoading"
         tooltip-effect="dark"
         border
         @selection-change="handleSelectionChange"
@@ -217,6 +218,7 @@ export default {
   name: 'task-list',
   data () {
     return {
+      tableLoading: true,
       tasks: [],
       hosts: [],
       project: [],
@@ -357,13 +359,15 @@ export default {
     },
     search (e, callback = null) {
       const that = this
+      this.tableLoading = true
       taskService.list(that.searchParams, (tasks, hosts, project) => {
         // debugger
+        that.tableLoading = false
         that.tasks = tasks.data
         that.taskTotal = tasks.total
         that.hosts = hosts
         that.project = project
-        this.$message.success('列表更新成功')
+        // this.$message.success('列表更新成功')
         if (callback) {
           callback()
         }
@@ -402,7 +406,7 @@ export default {
       })
     },
     jumpToLog (item) {
-      this.$router.push(`/task/log?task_id=${item.id}`)
+      window.open(`/#/task/log?task_id=${item.id}`,'_blank')
     },
     refresh (event) {
       this.search(event, () => {
@@ -412,11 +416,11 @@ export default {
     toEdit (item) {
       let path = ''
       if (item === null) {
-        path = '/task/create'
+        path = '/#/task/create'
       } else {
-        path = `/task/edit/${item.id}`
+        path = `/#/task/edit/${item.id}`
       }
-      this.$router.push(path)
+      window.open(path,'_blank')
     }
   }
 }

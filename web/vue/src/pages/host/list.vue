@@ -15,7 +15,7 @@
       </el-form>
       <el-row type="flex" justify="end">
         <el-button size="mini" type="primary" v-if="this.$store.getters.user.isAdmin" @click="toEdit(null)">新增</el-button>
-        <el-button size="mini" type="warning" @click="refresh">刷新</el-button>
+        <el-button size="mini" type="info" @click="refresh">刷新</el-button>
       </el-row>
       <el-pagination
         background
@@ -30,6 +30,7 @@
       <el-table
         :data="hosts"
         tooltip-effect="dark"
+        v-loading="tableLoading"
         border
         style="width: 100%; margin: 10px 0;">
         <el-table-column
@@ -79,6 +80,7 @@ export default {
   components: { hostSidebar },
   data () {
     return {
+      tableLoading: true,
       hosts: [],
       hostTotal: 0,
       searchParams: {
@@ -104,10 +106,12 @@ export default {
       this.search()
     },
     search (e, callback = null) {
+      this.tableLoading = true
       hostService.list(this.searchParams, (data) => {
         this.hosts = data.data
         this.hostTotal = data.total
-        this.$message.success('列表更新成功')
+        this.tableLoading = false
+        // this.$message.success('列表更新成功')
         if (callback) {
           callback()
         }
@@ -126,11 +130,11 @@ export default {
     toEdit (item) {
       let path = ''
       if (item === null) {
-        path = '/host/create'
+        path = '/#/host/create'
       } else {
-        path = `/host/edit/${item.id}`
+        path = `/#/host/edit/${item.id}`
       }
-      this.$router.push(path)
+      window.open(path, '_blank')
     },
     refresh (e) {
       this.search(e, () => {
@@ -138,13 +142,7 @@ export default {
       })
     },
     toTasks (item) {
-      this.$router.push(
-        {
-          path: '/task',
-          query: {
-            host_id: item.id
-          }
-        })
+      window.open(`/#/task?host_id=${item.id}`, '_blank')
     }
   }
 }

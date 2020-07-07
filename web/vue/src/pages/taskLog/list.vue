@@ -48,6 +48,7 @@
       </el-pagination>
       <el-table
         :data="logs"
+        v-loading="tableLoading"
         border
         ref="table"
         style="width: 100%">
@@ -158,6 +159,7 @@
     name: 'task-log',
     data() {
       return {
+        tableLoading: true,
         logs: [],
         logTotal: 0,
         searchParams: {
@@ -226,10 +228,12 @@
         this.search()
       },
       search(e, callback = null) {
+        this.tableLoading = true
         taskLogService.list(this.searchParams, (data) => {
           this.logs = data.data
           this.logTotal = data.total
-          this.$message.success('列表更新成功')
+          this.tableLoading = false
+          // this.$message.success('列表更新成功')
           if (callback) {
             callback()
           }

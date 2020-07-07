@@ -28,6 +28,7 @@
       <el-table
         :data="users"
         tooltip-effect="dark"
+        v-loading="tableLoading"
         border
         style="width: 100%; margin-top:10px;">
         <el-table-column
@@ -69,6 +70,7 @@ export default {
   components: { projectUserSidebar, addTemplateDialog },
   data () {
     return {
+      tableLoading: true,
       users: [],
       userTotal: 0,
       project: [],
@@ -110,6 +112,7 @@ export default {
       this.search()
     },
     search (e, callback = null) {
+      this.tableLoading = true
       const projectId = this.$route.query.project_id
       projectService.detail(projectId, (project) => {
         this.project = project
@@ -117,7 +120,8 @@ export default {
       projectUserService.list(projectId, this.searchParams, (data) => {
         this.users = data.data
         this.userTotal = data.total
-        this.$message.success('列表更新成功')
+        this.tableLoading = false
+        // this.$message.success('列表更新成功')
         if (callback) {
           callback()
         }
