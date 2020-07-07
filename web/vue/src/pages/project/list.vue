@@ -29,6 +29,7 @@
       </el-pagination>
       <el-table
         :data="projects"
+        v-loading="tableLoading"
         tooltip-effect="dark"
         border
         style="width: 100%; margin: 10px 0;">
@@ -70,6 +71,7 @@ export default {
   components: { projectSidebar },
   data () {
     return {
+      tableLoading: true,
       projects: [],
       projectTotal: 0,
       searchParams: {
@@ -94,10 +96,12 @@ export default {
       this.search()
     },
     search (e, callback = null) {
+      this.tableLoading = true
       projectService.list(this.searchParams, (data) => {
         this.projects = data.data
         this.projectTotal = data.total
-        this.$message.success('列表更新成功')
+        this.tableLoading = false
+        // this.$message.success('列表更新成功')
         if (callback) {
           callback()
         }
@@ -112,40 +116,25 @@ export default {
       console.log(item)
       let path = ''
       if (item === null) {
-        path = '/project/create'
+        path = '/#/project/create'
       } else {
-        path = `/project/edit/${item.id}`
+        path = `/#/project/edit/${item.id}`
       }
-      this.$router.push(path)
+      window.open(path,'_blank')
     },
     toManager (item) {
-      let path = ''
-      path = `/project/user/list?project_id=${item.id}`
-      this.$router.push(path)
+      window.open(`/#/project/user/list?project_id=${item.id}`,'_blank')
     },
     toAddTask (item) {
-      let path = ''
-      path = `/task/create?project_id=${item.id}`
-      this.$router.push(path)
+      window.open(`/#/task/create?project_id=${item.id}`,'_blank')
     },
     toTaskList (item) {
-      let path = ''
-      path = `/task?project_id=${item.id}`
-      this.$router.push(path)
+      window.open(`/#/task?project_id=${item.id}`,'_blank')
     },
     refresh (e) {
       this.search(e, () => {
         this.$message.success('刷新成功')
       })
-    },
-    toTasks (item) {
-      this.$router.push(
-        {
-          path: '/project',
-          query: {
-            host_id: item.id
-          }
-        })
     }
   }
 }

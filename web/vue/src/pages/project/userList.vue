@@ -18,6 +18,7 @@
       </el-pagination>
       <el-table
         :data="users"
+        v-loading="tableLoading"
         tooltip-effect="dark"
         border
         style="width: 100%; margin-top:10px;">
@@ -72,6 +73,7 @@ export default {
   components: { projectSidebar },
   data () {
     return {
+      tableLoading: true,
       users: [],
       userTotal: 0,
       searchParams: {
@@ -107,10 +109,12 @@ export default {
       this.search()
     },
     search (e, callback = null) {
+      this.tableLoading = true
       projectService.list(this.searchParams, (data) => {
         this.users = data.data
         this.userTotal = data.total
-        this.$message.success('列表更新成功')
+        this.tableLoading = false
+        // this.$message.success('列表更新成功')
         if (callback) {
           callback()
         }
