@@ -4,18 +4,15 @@ import axios from 'axios'
 const TokenKey = 'Admin-Token'
 
 export function getToken() {
-  // return Cookies.get(TokenKey)
-  return localStorage.getItem('token') || ''
+  return localStorage.token
 }
 
 export function setToken(token) {
-  // return Cookies.set(TokenKey, token)
-  localStorage.setItem('token', token)
-  return this
+  localStorage.token = token
 }
 
 export function removeToken() {
-  return Cookies.remove(TokenKey)
+  localStorage.token = ''
 }
 
 /* 获取base_api地址，区分dev和生产模式 */
@@ -28,4 +25,3 @@ export function getBaseApi() {
     }
   })
 }
-
