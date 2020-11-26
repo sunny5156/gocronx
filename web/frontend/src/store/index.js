@@ -1,16 +1,16 @@
-// import Vue from 'vue'
-// import Vuex from 'vuex'
-// import getters from './getters'
+import Vue from 'vue'
+import Vuex from 'vuex'
+import getters from './getters'
 
-import vue from 'vue'
-import vuex from 'vuex'
+// import vue from 'vue'
+// import vuex from 'vuex'
 
-import userStorage from '../storage/user'
+// import userStorage from '../storage/user'
 
-//new
-vue.use(vuex)
+// //new
+// vue.use(vuex)
 
-// Vue.use(Vuex)
+Vue.use(Vuex)
 
 // // https://webpack.js.org/guides/dependency-management/#requirecontext
 const modulesFiles = require.context('./modules', true, /\.js$/)
@@ -25,47 +25,47 @@ const modules = modulesFiles.keys().reduce((modules, modulePath) => {
   return modules
 }, {})
 
-// const store = new Vuex.Store({
-//   modules,
-//   getters
-// })
+const store = new Vuex.Store({
+  modules,
+  getters
+})
 
-// export default store
+export default store
 
 
 //new
 // vue.use(vuex)
-export default new vuex.Store({
-  state: {
-    hiddenNavMenu: false,
-    user: userStorage.get()
-  },
-  getters: {
-    user (state) {
-      return state.user
-    },
-    login (state) {
-      return state.user.token !== ''
-    }
-  },
-  modules: modules,
-  mutations: {
-    hiddenNavMenu (state) {
-      state.hiddenNavMenu = true
-    },
-    showNavMenu (state) {
-      state.hiddenNavMenu = false
-    },
-    setUser (state, user) {
-      userStorage.setToken(user.token)
-      userStorage.setUid(user.uid)
-      userStorage.setAccount(user.account)
-      userStorage.setIsAdmin(user.isAdmin)
-      state.user = user
-    },
-    logout (state) {
-      userStorage.clear()
-      state.user = userStorage.get()
-    }
-  }
-})
+// export default new vuex.Store({
+//   state: {
+//     hiddenNavMenu: false,
+//     user: userStorage.get()
+//   },
+//   getters: {
+//     user (state) {
+//       return state.user
+//     },
+//     login (state) {
+//       return state.user.token !== ''
+//     }
+//   },
+//   modules: modules,
+//   mutations: {
+//     hiddenNavMenu (state) {
+//       state.hiddenNavMenu = true
+//     },
+//     showNavMenu (state) {
+//       state.hiddenNavMenu = false
+//     },
+//     setUser (state, user) {
+//       userStorage.setToken(user.token)
+//       userStorage.setUid(user.uid)
+//       userStorage.setAccount(user.account)
+//       userStorage.setIsAdmin(user.isAdmin)
+//       state.user = user
+//     },
+//     logout (state) {
+//       userStorage.clear()
+//       state.user = userStorage.get()
+//     }
+//   }
+// })
