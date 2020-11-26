@@ -1,6 +1,9 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import getters from './getters'
+// import Vue from 'vue'
+// import Vuex from 'vuex'
+// import getters from './getters'
+
+import vue from 'vue'
+import vuex from 'vuex'
 
 import userStorage from '../storage/user'
 
