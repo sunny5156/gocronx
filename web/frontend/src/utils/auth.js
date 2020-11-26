@@ -4,11 +4,14 @@ import axios from 'axios'
 const TokenKey = 'Admin-Token'
 
 export function getToken() {
-  return Cookies.get(TokenKey)
+  // return Cookies.get(TokenKey)
+  return localStorage.getItem('token') || ''
 }
 
 export function setToken(token) {
-  return Cookies.set(TokenKey, token)
+  // return Cookies.set(TokenKey, token)
+  localStorage.setItem('token', token)
+  return this
 }
 
 export function removeToken() {
@@ -25,3 +28,4 @@ export function getBaseApi() {
     }
   })
 }
+
