@@ -45,16 +45,16 @@ package-all: build-vue statik
 
 .PHONY: build-vue
 build-vue:
-	cd web/vue && yarn run build
-	cp -r web/vue/dist/* web/public/
+	cd web/new-theme && yarn build
+	cp -r web/new-theme/dist/* web/public/
 
 .PHONY: install-vue
 install-vue:
-	cd web/vue && yarn install
+	cd web/new-theme && yarn install
 
 .PHONY: run-vue
 run-vue:
-	cd web/vue && yarn run dev
+	cd web/new-theme && yarn run dev
 
 .PHONY: statik
 statik:
