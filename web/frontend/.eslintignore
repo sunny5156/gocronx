@@ -1,0 +1,15 @@
+build/*.js
+config/*.js
+src/assets
+node_modules
+/node_modules/**
+*.sh
+*.conf
+/.editorconfig
+/.env.development
+/.env.production
+/.browserslistrc
+/babel.config.js
+/package.json
+/postcss.config.js
+/vue.config.js
