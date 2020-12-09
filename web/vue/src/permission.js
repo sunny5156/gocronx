@@ -23,21 +23,14 @@ router.beforeEach(async (to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  const isAdmin = !!JSON.parse(localStorage.getItem('userInfo')) ? JSON.parse(localStorage.getItem('userInfo')).is_admin : false
 
   if (hasToken) {
-    // 用户登录根据是否管理员设置路由
-    store.commit('SET_ROUTERS')
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
       next({ path: '/' })
       NProgress.done()
     } else {
-      if (to.meta.need_permission && !isAdmin) {
-        next({ path: '/401' })
-      } else {
-        next()
-      }
+      next()
     }
   } else {
     /* has no token*/
@@ -47,7 +40,7 @@ router.beforeEach(async (to, from, next) => {
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      next(`/login?redirect=${ to.path }`, { replace: true })
+      next(`/login?redirect=${to.path}`, { replace: true })
       NProgress.done()
     }
   }

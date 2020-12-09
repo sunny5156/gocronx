@@ -9,10 +9,10 @@
     v-drag-move
   >
     <div style="margin-bottom:15px;background: #606266;color: #fff;padding:10px;">
-      <pre>{{ detail.command }}</pre>
+      {{ detail.command }}
     </div>
     <div style="background: #606266;color: #fff;padding:10px;">
-      <pre>{{ detail.result }}</pre>
+      {{ detail.result }}
     </div>
   </el-dialog>
 </template>

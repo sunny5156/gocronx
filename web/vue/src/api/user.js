@@ -1,70 +1,45 @@
-import request from '@/utils/request'
+import httpClient from '../utils/httpClient'
 
-// 用户列表
-export function getUserList(query) {
-  return request({
-    url: '/user',
-    method: 'get',
-    params: query
-  })
-}
+export default {
+  list (query, callback) {
+    httpClient.get('/user', {}, callback)
+  },
 
-// 添加、编辑用户
-export function addUser(data) {
-  return request({
-    url: '/user/store',
-    method: 'post',
-    data
-  })
-}
+  detail (id, callback) {
+    httpClient.get(`/user/${id}`, {}, callback)
+  },
 
-// 启用用户
-export function enableUser(id) {
-  return request({
-    url: `/user/enable/${ id }`,
-    method: 'post'
-  })
-}
+  update (data, callback) {
+    httpClient.post('/user/store', data, callback)
+  },
 
-// 禁用用户
-export function disableUser(id) {
-  return request({
-    url: `/user/disable/${ id }`,
-    method: 'post'
-  })
-}
+  login (account, password, callback) {
+    httpClient.post('/user/login', { account, password }, callback)
+  },
 
-// 删除用户
-export function deleteUser(id) {
-  return request({
-    url: `/user/remove/${ id }`,
-    method: 'post'
-  })
-}
+  enable (id, callback) {
+    httpClient.post(`/user/enable/${id}`, {}, callback)
+  },
 
-// 修改密码
-export function editPassword(id, data) {
-  return request({
-    url: `user/editPassword/${data.id}`,
-    method: 'post',
-    data
-  })
-}
+  disable (id, callback) {
+    httpClient.post(`/user/disable/${id}`, {}, callback)
+  },
 
-//
-export function editMyPassword(data) {
-  return request({
-    url: '/user/editMyPassword',
-    method: 'post',
-    data
-  })
-}
+  remove (id, callback) {
+    httpClient.post(`/user/remove/${id}`, {}, callback)
+  },
 
-//
-export function searchUser(data) {
-  return request({
-    url: 'user/search',
-    method: 'post',
-    data
-  })
+  editPassword (data, callback) {
+    httpClient.post(`/user/editPassword/${data.id}`, {
+      'new_password': data.new_password,
+      'confirm_new_password': data.confirm_new_password
+    }, callback)
+  },
+
+  editMyPassword (data, callback) {
+    httpClient.post(`/user/editMyPassword`, data, callback)
+  },
+  search (data, callback) {
+    httpClient.post(`/user/search`, data, callback)
+  }
 }

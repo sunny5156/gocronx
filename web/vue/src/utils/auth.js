@@ -4,15 +4,15 @@ import axios from 'axios'
 const TokenKey = 'Admin-Token'
 
 export function getToken() {
-  return localStorage.token
+  return Cookies.get(TokenKey)
 }
 
 export function setToken(token) {
-  localStorage.token = token
+  return Cookies.set(TokenKey, token)
 }
 
 export function removeToken() {
-  localStorage.token = ''
+  return Cookies.remove(TokenKey)
 }
 
 /* 获取base_api地址，区分dev和生产模式 */
@@ -20,8 +20,13 @@ export function getBaseApi() {
   return new Promise((resolve, reject) => {
     if (process.env.NODE_ENV === 'production') {
       localStorage.removeItem('BASE_API')
-      localStorage.setItem('BASE_API', process.env.VUE_APP_BASE_API)
-      resolve(process.env.VUE_APP_BASE_API)
+      axios.get('server-config.json').then((res) => {
+        localStorage.setItem('BASE_API', res.data.BASE_API)
+        resolve(res.data.BASE_API)
+      }).catch((error) => {
+        localStorage.setItem('BASE_API', process.env.BASE_API)
+        reject(error)
+      })
     }
   })
 }

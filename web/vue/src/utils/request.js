@@ -5,7 +5,7 @@ import { getToken, getBaseApi } from '@/utils/auth'
 import qs from 'qs'
 
 // create an axios instance
-const BASE_API = process.env.VUE_APP_BASE_API
+const BASE_API = process.env.NODE_ENV === 'production' ? localStorage.getItem('BASE_API') : process.env.VUE_APP_BASE_API
 const service = axios.create({
   baseURL: BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests

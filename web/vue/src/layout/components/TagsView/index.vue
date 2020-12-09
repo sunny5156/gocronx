@@ -244,9 +244,9 @@
         margin-right: 15px;
       }
       &.active {
-        background-color: #409EFF;
+        background-color: #ffd04b;
         color: #fff;
-        border-color: #409EFF;
+        border-color: #ffd04b;
         &::before {
           content: '';
           background: #fff;

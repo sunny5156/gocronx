@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    append-to-body
     title="修改密码"
     :visible="open"
     class="task-log"
@@ -90,7 +91,7 @@ export default {
   watch: {
     open(val) {
       if (val) {
-        this.form.id = this.formData.id
+        this.form.id = this.formData.id ? this.formData.id : this.$store.getters.userInfo.uid
       }
     }
   }

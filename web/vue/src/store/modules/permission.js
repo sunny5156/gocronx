@@ -6,7 +6,6 @@ import { asyncRouterMap, constantRouterMap } from '@/router'
  * @param permissions
  * @param route
  */
-
 function hasPermission(permissions, route) {
   const whiteList = ['notFound']
   if (route.name && Vue._.indexOf(whiteList, route.name) !== -1) {
@@ -37,31 +36,15 @@ function filterAsyncRouter(asyncRouterMap, permissions) {
   return accessedRouters
 }
 
-/**
- * 过滤同步路由表，返回符合用户角色权限的路由表
- * @param routerArr
- */
-function routerFilter(routerArr) {
-  const isAdmin = !!JSON.parse(localStorage.getItem('userInfo')) ? JSON.parse(localStorage.getItem('userInfo')).is_admin : false
-  return routerArr.filter(v => {
-    if (!v.meta || !v.meta.need_permission || isAdmin) {
-      if (v.children && v.children.length) {
-        v.children = routerFilter(v.children)
-      }
-      return true
-    }
-    return false
-  })
-}
 const permission = {
   state: {
-    routers: [],
+    routers: constantRouterMap,
     addRouters: []
   },
   mutations: {
     SET_ROUTERS: (state, routers) => {
       state.addRouters = routers
-      state.routers = routerFilter(Vue._.cloneDeep(constantRouterMap))
+      state.routers = constantRouterMap.concat(routers)
     }
   },
   actions: {

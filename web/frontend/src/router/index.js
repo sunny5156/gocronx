@@ -31,6 +31,7 @@ Vue.use(Router)
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+
 export const constantRouterMap = [
   {
     path: '/login',
@@ -56,20 +57,21 @@ export const constantRouterMap = [
     meta: {
       title: '系统管理',
       icon: 'setting',
-      breadcrumb: false
+      breadcrumb: false,
+      need_permission: true
     },
     children: [
       {
         path: '/system/notice',
         name: 'system.notice',
         component: () => import('@/views/systemManager/notice'),
-        meta: { title: '通知配置', icon: 'notification' }
+        meta: { title: '通知配置', icon: 'notification', need_permission: true }
       },
       {
         path: '/system/logs',
         name: 'system.logs',
         component: () => import('@/views/systemManager/logs'),
-        meta: { title: '登录日志', icon: 'log' }
+        meta: { title: '登录日志', icon: 'log', need_permission: true }
       }
     ]
   },
@@ -82,7 +84,8 @@ export const constantRouterMap = [
         name: 'user.manager',
         component: () => import('@/views/userManager/list'),
         meta: { title: '用户管理', icon: 'user-manage' }
-      }]
+      }],
+    meta: { need_permission: true }
   },
   {
     path: '/project',
@@ -104,12 +107,13 @@ export const constantRouterMap = [
         },
         hidden: true
       }
-    ]
+    ],
+    meta: { need_permission: true }
   },
   {
     path: '/',
     component: Layout,
-    redirect: '/task/manager/timing-tasks',
+    redirect: '/task/manager/task-logs',
     alwaysShow: true, // will always show the root menu
     meta: {
       title: '任务管理',
@@ -121,7 +125,7 @@ export const constantRouterMap = [
         path: '/task/manager/timing-tasks',
         name: 'TimingTasks',
         component: () => import('@/views/taskManager/timingTasks'),
-        meta: { title: '定时任务', icon: 'task-management' }
+        meta: { title: '定时任务', icon: 'task-management', need_permission: true }
       },
       {
         path: '/task/manager/task-logs',
@@ -142,7 +146,12 @@ export const constantRouterMap = [
         meta: { title: '任务节点', icon: 'site01' }
       }
     ]
-  }
+  },
+  {
+    path: '*',
+    component: () => import('@/views/errorPage/404'),
+    hidden: true
+  },
 ]
 export const asyncRouterMap = [
   // {
@@ -193,6 +202,7 @@ export const asyncRouterMap = [
   // },
   { path: '*', redirect: '/404', hidden: true }
 ]
+
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),

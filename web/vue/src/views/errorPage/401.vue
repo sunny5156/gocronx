@@ -21,8 +21,8 @@
         <ul class="list-unstyled">
           <li>或者你可以去:</li>
           <li class="link-type">
-            <router-link to="/">
-              查看任务日志
+            <router-link to="/dashboard">
+              回首页
             </router-link>
           </li>
           <li class="link-type">
