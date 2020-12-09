@@ -1,28 +1,35 @@
-import httpClient from '../utils/httpClient'
+import request from '@/utils/request'
 
-export default {
-  // 任务列表
-  list (query, callback) {
-    httpClient.get('/host', query, callback)
-  },
+// 任务节点列表
+export function getHostList(params) {
+  return request({
+    url: '/host',
+    method: 'get',
+    params
+  })
+}
 
-  all (query, callback) {
-    httpClient.get('/host/all', {}, callback)
-  },
+// 添加、编辑任务节点
+export function addHost(data) {
+  return request({
+    url: `/host/store`,
+    method: 'post',
+    data
+  })
+}
 
-  detail (id, callback) {
-    httpClient.get(`/host/${id}`, {}, callback)
-  },
+// 删除任务节点
+export function deleteHost(id) {
+  return request({
+    url: `/host/remove/${id}`,
+    method: 'post'
+  })
+}
 
-  update (data, callback) {
-    httpClient.post('/host/store', data, callback)
-  },
-
-  remove (id, callback) {
-    httpClient.post(`/host/remove/${id}`, {}, callback)
-  },
-
-  ping (id, callback) {
-    httpClient.get(`/host/ping/${id}`, {}, callback)
-  }
+// 测试连接
+export function testHostLink(id) {
+  return request({
+    url: `host/ping/${id}`,
+    method: 'get'
+  })
 }

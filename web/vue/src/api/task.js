@@ -1,64 +1,95 @@
-import httpClient from '../utils/httpClient'
+import request from '@/utils/request'
 
-export default {
-  // 任务列表
-  list (query, callback) {
-    httpClient.batchGet([
-      {
-        uri: '/task',
-        params: query
-      },
-      {
-        uri: '/host/all'
-      },
-      {
-        uri: '/project/all'
-      }
-    ], callback)
-  },
+// 获取定时任务项目选项
+export function getTaskProject() {
+  return request({
+    url: '/project/all',
+    method: 'get'
+  })
+}
 
-  create (callback) {
-    httpClient.batchGet([
-      {
-        uri: '/host/all'
-      },
-      {
-        uri: '/project/all'
-      }
-    ], callback)
-  },
+// 获取定时任务节点选项
+export function getTaskHost() {
+  return request({
+    url: '/host/all',
+    method: 'get'
+  })
+}
 
-  detail (id, callback) {
-    httpClient.batchGet([
-      {
-        uri: `/task/${id}`
-      },
-      {
-        uri: '/host/all'
-      },
-      {
-        uri: '/project/all'
-      }
-    ], callback)
-  },
+// 获取定时任务列表
+export function getTimingTaskList(params) {
+  return request({
+    url: '/task',
+    method: 'get',
+    params
+  })
+}
 
-  update (data, callback) {
-    httpClient.post('/task/store', data, callback)
-  },
+// 启用定时任务
+export function enableTimingTask(data, id) {
+  return request({
+    url: `/task/enable/${ id }`,
+    method: 'post',
+    data
+  })
+}
 
-  remove (id, callback) {
-    httpClient.post(`/task/remove/${id}`, {}, callback)
-  },
+// 禁用定时任务
+export function disableTimingTask(data, id) {
+  return request({
+    url: `/task/enable/${ id }`,
+    method: 'post',
+    data
+  })
+}
 
-  enable (id, callback) {
-    httpClient.post(`/task/enable/${id}`, {}, callback)
-  },
+// 手动执行定时任务
+export function handleStartTimingTask(id) {
+  return request({
+    url: `/task/run/${ id }`,
+    method: 'get'
+  })
+}
 
-  disable (id, callback) {
-    httpClient.post(`/task/disable/${id}`, {}, callback)
-  },
+// 删除定时任务
+export function deleteTimingTask(id) {
+  return request({
+    url: `/task/remove/${ id }`,
+    method: 'post'
+  })
+}
 
-  run (id, callback) {
-    httpClient.get(`/task/run/${id}`, {}, callback)
-  }
+// 任务日志
+export function getTaskLogs(params) {
+  return request({
+    url: `task/log`,
+    method: 'get',
+    params
+  })
+}
+
+// 添加、编辑定时任务
+export function editTimingTask(data) {
+  return request({
+    url: '/task/store',
+    method: 'post',
+    data
+  })
+}
+
+// 清空日志
+export function clearTaskLogs() {
+  return request({
+    url: '/task/log/clear',
+    method: 'post'
+  })
+}
+
+// 停止任务
+export function stopTask(data) {
+  return request({
+    url: '/task/log/stop',
+    method: 'post',
+    data
+  })
 }
