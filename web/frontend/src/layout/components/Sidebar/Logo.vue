@@ -28,11 +28,6 @@
         class="sidebar-logo-link"
         to="/"
       >
-        <img
-          v-if="logo"
-          src="@/assets/logo-bai.png"
-          class="sidebar-logo"
-        >
         <h1 class="sidebar-title">
           {{ title }}
         </h1>
@@ -42,73 +37,73 @@
 </template>
 
 <script>
-  export default {
-    name: 'SidebarLogo',
-    props: {
-      collapse: {
-        type: Boolean,
-        required: true
-      }
-    },
-    data() {
-      return {
-        // title: this.$store.state.settings.getTitle,
-        title: this.$store.getters.title,
-        logo: '@/assets/logo.png'
-      }
+export default {
+  name: 'SidebarLogo',
+  props: {
+    collapse: {
+      type: Boolean,
+      required: true
+    }
+  },
+  data() {
+    return {
+      // title: this.$store.state.settings.getTitle,
+      title: this.$store.getters.title,
+      logo: '@/assets/logo.png'
     }
   }
+}
 </script>
 
 <style lang="scss" scoped>
-  .sidebarLogoFade-enter-active {
-    transition: opacity 1.5s;
-  }
+.sidebarLogoFade-enter-active {
+  transition: opacity 1.5s;
+}
 
-  .sidebarLogoFade-enter,
-  .sidebarLogoFade-leave-to {
-    opacity: 0;
-  }
+.sidebarLogoFade-enter,
+.sidebarLogoFade-leave-to {
+  opacity: 0;
+}
 
-  .sidebar-logo-container {
-    position: relative;
+.sidebar-logo-container {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background: #304156;
+  text-align: center;
+  overflow: hidden;
+  border-bottom: 1px solid #acacac;
+
+  & .sidebar-logo-link {
+    height: 100%;
     width: 100%;
-    height: 50px;
-    line-height: 50px;
-    background: #304156;
-    text-align: center;
-    overflow: hidden;
-    border-bottom: 1px solid #acacac;
 
-    & .sidebar-logo-link {
-      height: 100%;
-      width: 100%;
-
-      & .sidebar-logo {
-        width: 44px;
-        height: auto;
-        /*height: 32px;*/
-        border-radius: 4px;
-        vertical-align: middle;
-        margin-right: 5px;
-      }
-
-      & .sidebar-title {
-        display: inline-block;
-        margin: 0;
-        color: #fff;
-        font-weight: 600;
-        line-height: 50px;
-        font-size: 14px;
-        font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
-        vertical-align: middle;
-      }
+    & .sidebar-logo {
+      width: 44px;
+      height: auto;
+      /*height: 32px;*/
+      border-radius: 4px;
+      vertical-align: middle;
+      margin-right: 5px;
     }
 
-    &.collapse {
-      .sidebar-logo {
-        margin-right: 0px;
-      }
+    & .sidebar-title {
+      display: inline-block;
+      margin: 0;
+      color: #fff;
+      font-weight: 600;
+      line-height: 50px;
+      font-size: 14px;
+      font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
+      vertical-align: middle;
     }
   }
+
+  &.collapse {
+    .sidebar-logo {
+      margin-right: 0px;
+    }
+  }
+}
 </style>
