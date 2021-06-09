@@ -113,7 +113,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/task/manager/task-logs',
+    redirect: '/task/manager/timing-tasks',
     alwaysShow: true, // will always show the root menu
     meta: {
       title: '任务管理',
