@@ -37,7 +37,7 @@ export function enableTimingTask(data, id) {
 // 禁用定时任务
 export function disableTimingTask(data, id) {
   return request({
-    url: `/task/enable/${ id }`,
+    url: `/task/disable/${ id }`,
     method: 'post',
     data
   })
