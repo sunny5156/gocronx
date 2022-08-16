@@ -49,14 +49,6 @@ export const constantRouterMap = [
     hidden: true
   },
   {
-    path: '/install',
-    name: 'install',
-    component: () => import('@/views/install/index'),
-    meta: {
-      need_permission: false
-    }
-  },
-  {
     path: '/system',
     component: Layout,
     redirect: '/system/manager',

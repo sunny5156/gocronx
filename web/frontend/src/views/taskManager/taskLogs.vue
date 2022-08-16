@@ -24,6 +24,7 @@
       </el-form>
       <el-row class="right-row">
         <el-button type="danger" size="mini" @click="clearLogs">清空日志</el-button>
+        <el-button size="mini" type="info" @click="renderList">刷新</el-button>
       </el-row>
     </div>
     <div class="content-box">
@@ -46,7 +47,7 @@
               <el-form-item>
                 重试次数: {{ scope.row.retry_times }} <br>
                 cron表达式: {{ scope.row.spec }} <br>
-                命令: {{ scope.row.command }}
+                命令: <pre style="margin: 0;">{{ scope.row.command }}</pre>
               </el-form-item>
             </el-form>
           </template>

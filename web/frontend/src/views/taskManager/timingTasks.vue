@@ -4,7 +4,7 @@
     <div class="header-box" ref="headerBox">
       <el-form ref="listQuery" :inline="true" :model="listQuery" class="advt-form-inline" size="mini">
         <el-form-item prop="project_id" label="所属项目">
-          <el-select v-model.trim="listQuery.project_id" clearable placeholder="请选择">
+          <el-select v-model.trim="listQuery.project_id" filterable clearable placeholder="请选择">
             <el-option
               v-for="item in project"
               :key="item.id"
@@ -105,7 +105,7 @@
               </el-form-item>
               <br>
               <el-form-item label="命令:" style="width: 100%">
-                {{ scope.row.command }}
+                <pre style="margin:0;">{{ scope.row.command }}</pre>
               </el-form-item>
               <br>
               <el-form-item label="备注" style="width: 100%">
@@ -114,9 +114,9 @@
             </el-form>
           </template>
         </el-table-column>
-        <el-table-column prop="id" width="100" label="任务ID"></el-table-column>
-        <el-table-column prop="name" label="任务名称" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="project_name" label="所属项目">
+        <el-table-column prop="id" width="100" label="任务ID" align="center"></el-table-column>
+        <el-table-column prop="name" label="任务名称" align="center" show-overflow-tooltip width="200"></el-table-column>
+        <el-table-column prop="project_name" label="所属项目" align="center">
           <template slot-scope="scope">
             <el-button
               type="text"
@@ -127,23 +127,23 @@
             </el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="account" label="创建者">
+        <el-table-column prop="account" label="创建者" align="center">
           <template slot-scope="scope">
             <el-button type="text" title="点击可筛选当前创建者" @click="filterList('account',scope.row.account)">{{ scope.row.account }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="tag" label="标签">
+        <el-table-column prop="tag" label="标签" align="center">
           <template slot-scope="scope">
             <el-button type="text" title="点击可筛选当前标签" @click="filterList('tag',scope.row.tag)">{{ scope.row.tag }}</el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="spec" label="cron表达式" width="140"></el-table-column>
-        <el-table-column label="下次执行时间" width="180">
+        <el-table-column prop="spec" label="cron表达式" header-align="center" width="140"></el-table-column>
+        <el-table-column label="下次执行时间" align="center" width="180">
           <template slot-scope="scope">
             {{ scope.row.next_run_time | formatTime }}
           </template>
         </el-table-column>
-        <el-table-column label="状态" v-if="this.isAdmin" width="100">
+        <el-table-column label="状态" v-if="this.isAdmin" width="100" align="center">
           <template slot-scope="scope">
             <el-switch
               v-if="scope.row.level === 1"
@@ -171,7 +171,7 @@
             </el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="340" v-if="this.isAdmin">
+        <el-table-column label="操作" width="340" v-if="this.isAdmin" align="center">
           <template slot-scope="scope">
             <el-button size="mini" type="primary" @click="openTaskDialog('edit',scope.row)">编辑</el-button>
             <el-button size="mini" type="success" @click="runTask(scope.row)">手动执行</el-button>
@@ -501,4 +501,19 @@ export default {
   transition: linear .5s;
   cursor: pointer;
 }
+.demo-table-expand {
+  font-size: 0;
+}
+
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+
 </style>

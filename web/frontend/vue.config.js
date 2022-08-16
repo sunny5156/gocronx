@@ -26,7 +26,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/public/',
+  publicPath: 'public/',
 
   // 输出文件路径，默认为dist
   outputDir: 'dist',
