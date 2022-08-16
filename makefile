@@ -65,3 +65,5 @@ statik:
 clean:
 	rm bin/gocronx
 	rm bin/gocronx-node
+	rm -rf web/frontend/dist
+	rm -rf web/public
